@@ -1,3 +1,5 @@
+from Application import app
+
+#run the program
 if (__name__ == "__main__"):
-    #Run program
-    print("Running program!")
+    app.run(debug=True)
