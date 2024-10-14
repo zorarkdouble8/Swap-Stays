@@ -5,6 +5,9 @@
 </head>
 <body>
     <h1>Create a user!</h1>
+    {% if error != None %}
+        <h2>{{ error }}</h2>
+    {% endif %}
 
      <!--Create User fourm-->
      <!--TODO add in password requirements-->
@@ -16,7 +19,8 @@
         <input name="email" type="email"/>
         <br/>
         <label>Password</label>
-        <input name="password" type="password"/>
+        <!--TODO add a visible button for user to see password-->
+        <input name="password" minlength="12" maxlength="50" type="password"/>
         <br/>
         <label>Confirm Password</label>
         <input name="confirm_password" type="password"/>

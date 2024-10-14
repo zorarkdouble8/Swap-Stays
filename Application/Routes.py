@@ -14,18 +14,20 @@ def userHome():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
+
     if (request.method == "POST"):
         if (verify_login(request.form["username"], request.form["password"]) == False):
-            #TODO add error in login page
-            print("Error, wrong password or username")
+            error = "Error: wrong password or username"
         else:
             #TODO add cookie to user
             return redirect_logged_in()
-    else:
-        return render_template("Login/Login.html")
+    
+    return render_template("Login/Login.html", error=error)
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
+    error = None
     if (request.method == "POST"):
         #Create a user!
         username = request.form["username"]
@@ -40,16 +42,14 @@ def createUser():
             if (did_create_user and verify_login(username, password)):  
                 return redirect_logged_in()
             elif (not did_create_user):
-                print("failed to create user")
+                error = "failed to create user, please try again"
             else:
-                print("failed to log user in!")
-                #TODO return render template with a error
+                error = "failed to log user in!"
                 #TODO return more descriptive error because usernames are unique
         else:
-            print("Passwords are not equal!")
-            #TODO return template but with message saying passwords arn't equal!
+            error = "Passwords are not equal!"
 
-    return render_template("Login/CreateUser.html")
+    return render_template("Login/CreateUser.html", error=error)
 
 #redirects all logged in users to a certain page
 #returns: render template

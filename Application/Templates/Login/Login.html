@@ -4,6 +4,9 @@
 </head>
 <body>
     <h1>Login page!</h1>
+    {% if error != None %}
+        <h2>{{ error }}</h2>
+    {% endif %}
 
     <!--Login fourm-->
     <form method="post">
