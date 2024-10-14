@@ -45,16 +45,7 @@ def encrypt_password(password) -> str:
 #compares a password with a encrypted password
 #returns true if it's the same
 def compare_passwords(password, encrypted_password):
-    if (password == decrypt_password(encrypted_password)):
+    if (encrypt_password(password) == encrypted_password):
         return True
     else:
         return False
-    
-#returns a decrypted password
-def decrypt_password(encrypted_password) -> str:
-    type = PBKDF2HMAC(hashes.SHA256(), 32, bytes(os.environ["SALT_KEY"], "utf-8"), 500000)
-    key = urlsafe_b64encode(type.derive(bytes(os.environ["ENCRYPT_KEY"], "utf-8")))
-    algor = Fernet(key)
-    password = algor.decrypt(encrypted_password)
-
-    return password
