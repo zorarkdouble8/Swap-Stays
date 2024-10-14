@@ -553,3 +553,11 @@ video {
 [hidden] {
   display: none;
 }
+
+.static {
+  position: static;
+}
+
+.outline {
+  outline-style: solid;
+}
