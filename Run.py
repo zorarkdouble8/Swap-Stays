@@ -39,3 +39,7 @@ def create_place():
 # Redirects all logged-in users to a certain page (adjust as needed)
 def redirect_logged_in():
     return render_template("Home/Home.html")
+
+#run the program
+if (__name__ == "__main__"):
+    app.run(debug=True)
