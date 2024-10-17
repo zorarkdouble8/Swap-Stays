@@ -1,6 +1,6 @@
 from flask import render_template
 from Application import app
-from flask import request
+from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
 
 @app.route("/")
@@ -17,10 +17,12 @@ def login():
     error = None
 
     if (request.method == "POST"):
-        if (verify_login(request.form["username"], request.form["password"]) == False):
+        user = None
+        if (verify_login(request.form["username"], request.form["password"], user) == False):
             error = "Error: wrong password or username"
         else:
-            #TODO add cookie to user
+            session["User"] = user
+            print(user)
             return redirect_logged_in()
     
     return render_template("Login/Login.html", error=error)

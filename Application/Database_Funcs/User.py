@@ -8,7 +8,8 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 #verifies the login and returns a bool
-def verify_login(username, password) -> bool:
+#if successful, the return_User_Obj will point to the user object
+def verify_login(username, password, return_User_Obj = None) -> bool:
     try:   
         user = db.session.query(User).filter_by(username = username).first()
     except Exception as e:
@@ -18,6 +19,7 @@ def verify_login(username, password) -> bool:
     if (user == None):
         return False
     elif (compare_passwords(password, encrypted_password=user.password)):
+        return_User_Obj = user
         return True
         
 #creates a user and return true if it succeeds
