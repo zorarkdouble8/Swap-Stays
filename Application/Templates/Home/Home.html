@@ -16,7 +16,7 @@
         }
 
         .dropbtn {
-            background-color: #04AA6D;
+            background-color: #1e4387;
             color: white;
             padding: 16px;
             font-size: 16px;
@@ -25,7 +25,7 @@
         }
 
         dropbtn:hover, .dropbtn:focus {
-            background-color: #3e8e41;
+            background-color: #628ab1;
         }
 
         #myInput {
@@ -34,7 +34,7 @@
             background-position: 14px 12px;
             background-repeat: no-repeat;
             font-size: 16px;
-            padding: 14px 20px 12px 45px;
+            padding: 7px 10px 6px 23px;
             border: none;
             border-bottom: 1px solid #ddd;
         }
@@ -50,14 +50,14 @@
             display: none;
             position: absolute;
             background-color: #f6f6f6;
-            min-width: 230px;
+            min-width: 160px;
             border: 1px solid #ddd;
             z-index: 1;
         }
 
         .dropdown-content a {
             color: black;
-            padding: 12px 16px;
+            padding: 5px 8px;
             text-decoration: none;
             display: block;
         }
@@ -77,14 +77,24 @@
             <p class="text-lg sm:text-xl mb-6 text-white">Find and book your perfect stay close to campus with ease!</p>
             
             <div class="dropdown">
-                <button onclick="toggleDropdown()" class="dropbtn">Dropdown</button>
+                <button onclick="toggleDropdown()" class="dropbtn">Number of guests</button>
                 <div id="myDropdown" class="dropdown-content">
                     <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">7</a>
+                    <a href="#">8</a>
                 </div>
             </div>
+
+            <label for ="checkin" class="text-white">Check in</label>
+            <input type="date" id="checkin" name="checkin">
+            <label for ="checkout" class="text-white">Check out</label>
+            <input type="date" id="checkout" name="checkout">
             
             <!-- Placeholder Button
             <button class="bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">
@@ -112,6 +122,11 @@
             }
           }
         }
+
+        const dateControl = 
+        document.querySelector('input[type="date"]');
+        console.log(dateControl);
+        console.log(dateControl.value);
         </script>
 
 </body>
