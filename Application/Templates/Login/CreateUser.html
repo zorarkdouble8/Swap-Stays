@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<head>
+
+
+</head>
+<body>
+    <h1>Create a user!</h1>
+    {% if error != None %}
+        <h2>{{ error }}</h2>
+    {% endif %}
+
+     <!--Create User fourm-->
+     <!--TODO add in password requirements-->
+     <form method="post">
+        <label>Username</label>
+        <input name="username" type="text"/>
+        <br/>
+        <label>Email</label>
+        <input name="email" type="email"/>
+        <br/>
+        <label>Password</label>
+        <!--TODO add a visible button for user to see password-->
+        <input name="password"maxlength="50" type="password"/>
+        <br/>
+        <label>Confirm Password</label>
+        <input name="confirm_password" type="password"/>
+        <br/>
+        <input value="Submit" type="submit"/>
+    </form>
+
+</body>
