@@ -7,9 +7,9 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-#verifies the login and returns a bool
-#if successful, the return_User_Obj will point to the user object
-def verify_login(username, password, return_User_Obj = None) -> bool:
+#verifies the login and returns the user object
+#if unsuccessful, it returns none
+def verify_login(username, password) -> User:
     try:   
         user = db.session.query(User).filter_by(username = username).first()
     except Exception as e:
@@ -17,23 +17,24 @@ def verify_login(username, password, return_User_Obj = None) -> bool:
         return False
 
     if (user == None):
-        return False
+        return None
     elif (compare_passwords(password, encrypted_password=user.password)):
-        return_User_Obj = user
-        return True
+        return user
+    else:
+        return None
         
-#creates a user and return true if it succeeds
-def create_user(username, password, email=None) -> bool:
+#creates a user and return None if it fails
+def create_user(username, password, email=None) -> User:
     token = encrypt_password(password)
     new_user = User(username, token, email)
 
     try:
         db.session.add(new_user)
         db.session.commit()
-        return True
+        return new_user
     except Exception as error:
         print(error)
-        return False
+        return None
     
 #returns an encrypted password
 def encrypt_password(password) -> str:
@@ -44,10 +45,19 @@ def encrypt_password(password) -> str:
 
     return token
 
+#returns a decrypted password
+def decrypt_password(encrypted_password) -> str:
+    type = PBKDF2HMAC(hashes.SHA256(), 32, bytes(os.environ["SALT_KEY"], "utf-8"), 500000)
+    key = urlsafe_b64encode(type.derive(bytes(os.environ["ENCRYPT_KEY"], "utf-8")))
+    algor = Fernet(key)
+    password = algor.decrypt(encrypted_password)
+
+    return password
+
 #compares a password with a encrypted password
 #returns true if it's the same
 def compare_passwords(password, encrypted_password):
-    if (encrypt_password(password) == encrypted_password):
+    if (bytes(password, "utf-8") == decrypt_password(encrypted_password)):
         return True
     else:
         return False

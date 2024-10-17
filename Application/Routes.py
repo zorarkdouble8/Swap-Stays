@@ -2,6 +2,7 @@ from flask import render_template
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
+from Application.Models import User
 
 @app.route("/")
 def home():
@@ -17,13 +18,12 @@ def login():
     error = None
 
     if (request.method == "POST"):
-        user = None
-        if (verify_login(request.form["username"], request.form["password"], user) == False):
+        user = verify_login(request.form["username"], request.form["password"])
+        if (user == None):
             error = "Error: wrong password or username"
         else:
-            session["User"] = user
-            print(user)
-            return redirect_logged_in()
+            session["UserId"] = user.id
+            return redirect_logged_in(user)
     
     return render_template("Login/Login.html", error=error)
 
@@ -39,15 +39,14 @@ def createUser():
 
         #TODO prevent SQL injection
         if (password == confirm_pass):
-            did_create_user = create_user(username, password, email)
+            user = create_user(username, password, email)
 
-            if (did_create_user and verify_login(username, password)):  
-                return redirect_logged_in()
-            elif (not did_create_user):
-                error = "failed to create user, please try again"
+            if (user != None and verify_login(username, password)):  
+                return redirect_logged_in(user)
+            elif (user != None):
+                error = "failed to create user, please try again" #TODO Perhaps because usernames are unique
             else:
-                error = "failed to log user in!"
-                #TODO return more descriptive error because usernames are unique
+                error = "failed to log user in!" #TODO Perhaps because usernames are unique
         else:
             error = "Passwords are not equal!"
 
@@ -55,5 +54,6 @@ def createUser():
 
 #redirects all logged in users to a certain page
 #returns: render template
-def redirect_logged_in():
-    return render_template("Home/Home.html")
+def redirect_logged_in(user: User):
+    print("User: ", user)
+    return render_template("User/Home.html", user=user)
