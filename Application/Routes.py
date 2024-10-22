@@ -22,13 +22,6 @@ def userHome():
 
         return render_template("Error/404.html")
 
-#api route
-@app.route("/logout")
-def logout():
-    session.clear()
-
-    return { "message": "Successful", "redirect": "/login" }
-
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None

@@ -13,7 +13,7 @@ async function logout()
         {
             info.innerHTML = "Logged out";
             
-            window.setTimeout(()=>{window.location.href = response.redirect;}, 1000)
+            window.setTimeout(()=>{window.location.href = response.redirect;}, 1000);
         }
         else
         {
