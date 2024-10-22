@@ -1,8 +1,9 @@
-from flask import render_template
+from flask import render_template, request, redirect
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
 from Application.Models import User
+
 
 @app.route("/")
 def home():
@@ -57,3 +58,34 @@ def createUser():
 def redirect_logged_in(user: User):
     print("User: ", user)
     return render_template("User/Home.html", user=user)
+
+# Display a list of places
+@app.route("/places")
+def places():
+    # Fetch all the places from the database
+    places_list = get_places()
+    return render_template("Places/Places.html", places=places_list)
+
+# Route to add a new place
+@app.route("/add_place", methods=["GET", "POST"])
+def create_place():
+    error = None
+    if request.method == "POST":
+        # Retrieve form data
+        place_name = request.form["place_name"]
+        place_type = request.form["type"]
+        price = request.form["price"]
+        amenities = request.form["amenities"]
+        rating = request.form["rating"]
+        campus_distance = request.form["campus_distance"]
+
+        # Add the place to the database
+        did_add_place = add_place(place_name, place_type, price, amenities, rating, campus_distance)
+
+        if did_add_place:
+            return redirect("/places")
+        else:
+            error = "Failed to add the place. Please try again."
+
+    return render_template("Places/AddPlace.html", error=error)
+
