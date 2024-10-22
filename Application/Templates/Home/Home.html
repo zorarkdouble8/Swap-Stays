@@ -18,9 +18,9 @@
         .dropbtn {
             background-color: #1e4387;
             color: white;
-            padding: 16px;
+            padding: 13px;
             font-size: 16px;
-            border: none;
+            border: 1px solid #ddd;
             cursor: pointer;
         }
 
@@ -30,7 +30,6 @@
 
         #myInput {
             box-sizing: border-box;
-            background-image: url('searchicon.png');
             background-position: 14px 12px;
             background-repeat: no-repeat;
             font-size: 16px;
@@ -71,50 +70,58 @@
 
 <body class="font-serif">
 
-    <div class="flex flex-col items-center justify-center h-screen backgroundBlue textOrange text-center">
-        <div class="px-4 sm:px-6 lg:px-8">
-            <h1 class="text-4xl sm:text-5xl font-bold mb-4">Welcome to Swamp Stays</h1>
-            <p class="text-lg sm:text-xl mb-6 text-white">Find and book your perfect stay close to campus with ease!</p>
+    <div class="flex flex-col justify-center items-center h-screen backgroundBlue textOrange text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">Welcome to Swamp Stays</h1>
+        <p class="text-lg sm:text-xl mb-6 text-white">Find and book your perfect stay close to campus with ease!</p>
 
-            <form method="POST">
-                <div class="dropdown">
-                    <button type="button" onclick="toggleDropdown()" class="dropbtn">Number of guests</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <input type="text" placeholder="Search.." id="myInput" name="num_guests" onkeyup="filterFunction()">
-                        <a href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <a href="#">5</a>
-                        <a href="#">6</a>
-                        <a href="#">7</a>
-                        <a href="#">8</a>
-
-                    </div>
+        <form method="POST">
+            <!--number of guests dropdown-->
+            <div class="dropdown">
+                <button type="button" onclick="toggleDropdown()" class="dropbtn">Number of guests</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <input type="text" placeholder="Search.." id="myInput" name="num_guests" onkeyup="filterFunction()">
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <a href="#">5</a>
+                    <a href="#">6</a>
+                    <a href="#">7</a>
+                    <a href="#">8</a>
                 </div>
+            </div>
 
-                <label for ="checkin" class="text-white">Check in</label>
-                <input type="date" id="checkin" name="checkin">
-                <label for ="checkout" class="text-white">Check out</label>
-                <input type="date" id="checkout" name="checkout">
+                <!--date picker labels-->
+            <label for ="checkin" class="text-white">Check in</label>
+            <input type="date" id="checkin" name="checkin">
+            <label for ="checkout" class="text-white">Check out</label>
+            <input type="date" id="checkout" name="checkout">
 
-                <div class="dropdown">
-                    <button type="button" onclick="toggleDropdown()" class="dropbtn">Distance from campus</button>
-                    <div id="myDropdown" class="dropdown-content">
-                        <input type="text" placeholder="Search.." id="myInput" name="miles_campus" onkeyup="filterFunction()">
-                        <a href="#">under 5 min</a>
-                        <a href="#">5 min</a>
-                        <a href="#">10 min</a>
-                        <a href="#">15 min</a>
-                    </div>
+            <!--TODO: fix distance dropdown-->
+            <div class="dropdown">
+                <button type="button" onclick="toggleDropdown()" class="dropbtn">Distance from campus</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <input type="text" placeholder="Search.." id="myInput" name="miles_campus" onkeyup="filterFunction()">
+                    <a href="#">under 5 min</a>
+                    <a href="#">5 min</a>
+                    <a href="#">10 min</a>
+                    <a href="#">15 min</a>
                 </div>
+            </div>
 
-                <button type="submit"  class="flex justify-center items-center bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">
-                    Start Booking
-                </button>
-            </form>
-        </div>
+            <!--TODO: center this button-->
+            <button type="submit" class="flex mt-8 items-center justify-center bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">
+                Start Booking
+            </button>
+
+        </form>
+        
+        <a href="login">
+            <button class="flex fixed top-10 right-10 bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">Login</button>
+        </a>
+
     </div>
+</div>
 
     <script>
         function toggleDropdown() {
@@ -122,7 +129,7 @@
         }
         
         function filterFunction() {
-          const input = document.getElementById("myInput");
+          const input = docucenterment.getElementById("myInput");
           const filter = input.value.toUpperCase();
           const div = document.getElementById("myDropdown");
           const a = div.getElementsByTagName("a");
