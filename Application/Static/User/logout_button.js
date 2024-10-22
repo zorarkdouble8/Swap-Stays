@@ -1,7 +1,25 @@
 async function logout()
 {
-    console.log("CLICKED!");
+    var info = document.getElementById("Info");
+    info.innerHTML = "Logging out";
 
-    response = await fetch("/logout");
-    console.log(response.json());
+    var button = document.getElementById("Logout");
+    button.disabled = true;
+
+    var response = await fetch("/logout");
+
+    response.json().then((response)=>{
+        if (response.message == "Successful")
+        {
+            info.innerHTML = "Logged out";
+            
+            window.setTimeout(()=>{window.location.href = response.redirect;}, 1000)
+        }
+        else
+        {
+            info.innerHTML = "Error occured";
+        }
+    });
+
+    
 }

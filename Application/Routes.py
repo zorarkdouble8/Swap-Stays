@@ -27,7 +27,7 @@ def userHome():
 def logout():
     session.clear()
 
-    return { "message": "Successful" }
+    return { "message": "Successful", "redirect": "/login" }
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
