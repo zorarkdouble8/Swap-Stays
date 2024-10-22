@@ -4,6 +4,7 @@ import os
 
 app = Flask(__name__)
 app.template_folder = "./Templates"
+app.static_folder = "./Static"
 
 #DATABASE config
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Database.db"
