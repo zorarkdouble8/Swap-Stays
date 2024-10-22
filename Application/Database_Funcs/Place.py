@@ -23,4 +23,4 @@ def add_place(place_name, place_type, price, amenities, rating, campus_distance)
     except Exception as e:
         print(f"Error adding place: {e}")
         db.session.rollback()
-        return False
+        return None
