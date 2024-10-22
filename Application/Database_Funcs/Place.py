@@ -1,4 +1,5 @@
 from Application.Models import Place
+from Application import db
 
 # Function to retrieve all places from the database
 def get_places():
