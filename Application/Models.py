@@ -1,7 +1,11 @@
 from Application import app, db
 
+#creates a database if there's no database
+with app.app_context():
+    db.create_all()
+
 class User(db.Model):
-    def __init__(self, username, password, email=None):
+    def __init__(self, username:str, password:str, email:str=None) -> None:
         self.username = username
         self.password = password
         self.email = email
@@ -11,13 +15,16 @@ class User(db.Model):
     password = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=True)
 
-#creates a database if there's no database
-with app.app_context():
-    db.create_all()
-
-from Application import app, db
-
 class Place(db.Model):
+    #TODO make it to only have specific types and the rating from only 1 to 5
+    def __init__(self, name:str, type:str, price:float, amentities:str = None, rating:int = None, campus_distance:float = None) -> None:
+        self.place_name = name
+        self.place_type = type
+        self.price = price
+        self.amenities = amentities
+        self.rating = rating
+        self.campus_distance = campus_distance
+
     __tablename__ = 'places'
 
     place_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -30,3 +37,4 @@ class Place(db.Model):
 
     def __repr__(self):
         return f'<Place {self.place_name}>'
+
