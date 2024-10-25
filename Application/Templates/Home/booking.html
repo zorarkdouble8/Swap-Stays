@@ -1,0 +1,131 @@
+<!doctype html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<style>
+    .checked{
+        color: #ffa500;
+    }
+    .backgroundBlue{
+        background-color: #2e4775;
+    }
+    .buttonColor{
+        color: #0c2a61;
+    }
+    .textColor{
+        color: #eb8560;
+    }
+    .headColor{
+        color: #ec5017;
+    }
+</style>
+
+<body class="font-serif">
+    <div class="min-h-screen backgroundBlue">
+    <!-- navbar code modified to fit SwampStays from https://www.creative-tim.com/twcomponents/component/airbnb-navbar -->
+        <nav class=" bg-blue-300 w-full flex relative justify-between items-center mx-auto px-8 h-20 mb-4">
+            <!-- logo -->
+            <div class="inline-flex">
+                <a class="_o6689fn" href="/">
+                    <div class="block">
+                        <h1 class="text-2xl font-bold headColor">Swamp Stays</h1>
+                    </div>
+                </a>
+            </div>
+            <!-- end logo -->
+            <!-- search bar -->
+            
+            <div class="hidden sm:block flex-shrink flex-grow-0 justify-start px-2">
+                <a href="/" class="inline-block bg-blue-800 hover:bg-blue-700 textColor font-bold py-2 px-8 rounded-full">
+                    Back to Search
+                </a>
+            </div>
+        
+            <!-- end search bar -->
+        
+            <!-- login -->
+            <div class="flex-initial">
+                <div class="flex justify-end items-center relative">
+                
+                    <div class="flex mr-4 items-center">
+                    <a class="inline-block py-2 px-3 hover:bg-gray-200 rounded-full" href="#">
+                        <div class="flex items-center relative cursor-pointer whitespace-nowrap headColor">Host your own stay</div>
+                    </a>
+                    </div>
+            
+                    <div class="block">
+                        <div class="inline relative">
+                            <button type="button" class="inline-flex items-center relative px-2 border rounded-full hover:shadow-lg">
+                                <div class="h-8 w-8 rounded-full bg-gray-300"></div>
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            <!-- end login -->
+        </nav>   
+        <h1 class="text-left font-bold text-3xl headColor  mb-4">{{ stay.name }}</h1>   
+        <div class="flex flex-nowrap space-x-4 mb-4">    
+            <img src="{{ stay.image }}" alt="{{ stay.name }}" width="400" height="350" class="rounded-lg">
+            <div class="text-center">
+                <h2 class="underline headColor text-xL">Star Rating</h2>
+        
+                {% for i in range(1, 6) %}
+                    {% if i <= stay.star_review %}
+                        <span class="fa fa-star checked"></span>
+                    {%else%}
+                        <span class="fa fa-star"></span>
+                    {% endif %}
+                {% endfor %}
+                    
+                    <h3 class="text-xl headColor underline">Description</h3>
+                    <div class="textColor">
+                    {% for i in stay.description.split(', ') %}
+                        <p class="text-center textColor mb-2">- {{i}}</p>
+                    {% endfor %}
+                    </div>
+                <!--Book Now button, will navigate to a page to book and put in payment and reservation info-->
+                <a href="{{ url_for('booking', stay_id=stay.id) }}" class="bg-blue-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded">
+                    Book Now
+                </a>
+            </div>
+        </div>
+    <div>
+        <dd class="flex items-center textColor" >
+            <!--location icon-->
+            <svg width="24" height="24" fill="none" stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 text-slate-400 dark:text-slate-500" aria-hidden="true">
+                <path d="M18 11.034C18 14.897 12 19 12 19s-6-4.103-6-7.966C6 7.655 8.819 5 12 5s6 2.655 6 6.034Z" />
+                <path d="M14 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+            </svg>
+            {{ stay.location }}
+        </dd>
+
+        <h1 class="text-left font-bold text-3xl headColor  mb-4 underline">Reviews</h1>
+        {% for review in stay.reviews %}
+            <dl>
+                <dt class="text-xl textColor">- {{review.user}}</dt>
+                <dd class="textColor ml-4">- {{review.opinion}}</dd>
+
+                <!--I am thinking we have a link to view more reviews... but we need a reviews database for that as well-->
+            </dl>
+        {% endfor %}
+        <!--Add a review-->
+        <p class="text-left headColor font-bold">Add a review:</p>
+        <form action="{{ url_for('add_review', stay_id=stay.id) }}" method="POST">
+            <textarea id="review" rows="3" cols ="50" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
+            <div class="text-left">
+                <input type="submit" class="bg-blue-500 text-left hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-1 px-2 rounded" value="Submit">
+            </div>
+        </form> 
+            <!--end add review-->
+    </div> 
+    
+
+</body>
