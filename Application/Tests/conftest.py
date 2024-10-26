@@ -1,16 +1,19 @@
-from Application import app
 import pytest
 
 @pytest.fixture()
-def test():
-    assert(3==3)
+def application():
+    from Application import app
+    app.testing = True
+
+    return app
+    
 
 @pytest.fixture()
-def client(app):
-    return app.test_client()
+def client(application):
+    return application.test_client()
 
 
 @pytest.fixture()
-def runner(app):
-    return app.test_cli_runner()
+def runner(application):
+    return application.test_cli_runner()
 
