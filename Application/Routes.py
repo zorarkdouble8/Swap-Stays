@@ -1,4 +1,4 @@
-from flask import render_template, redirect
+from flask import render_template, redirect, abort
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import *
@@ -20,7 +20,7 @@ def userHome():
     else:
         print("Not logged in!")
 
-        return render_template("Error/404.html")
+        abort(404)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask.testing import FlaskCliRunner, FlaskClient
 import pytest
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def application() -> Flask:
     from Application import app, db
     app.testing = True

@@ -11,13 +11,18 @@ if (__name__ == "__main__"):
     args = parser.parse_args()
 
     if (args.production == True):
+        os.environ["TESTING"] = "False"
         from Application import app
+
         app.run()
     elif (args.test == True):
         os.environ["TESTING"] = "True"
         from Application import app
+
         pytest.main(["--rootdir=./Application/"])
     else:
+        os.environ["TESTING"] = "False"
         from Application import app
+        
         app.run(debug=True)
 

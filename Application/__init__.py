@@ -26,4 +26,5 @@ app.secret_key = os.environ["COOKIE_KEY"]
 #init other stuff
 import Application.Models
 import Application.Routes
+import Application.Error_Routes
 import Application.API
