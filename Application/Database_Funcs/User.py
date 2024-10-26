@@ -9,7 +9,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 def get_user(id:int) -> User:
     try:
-        user = db.session.query(User).get(id)
+        user = db.session.get(User, id)
         return user
     except Exception as e:
         print(e)

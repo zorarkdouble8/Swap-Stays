@@ -34,7 +34,7 @@ class Test_Login:
             print("History:", response.history)
             print("Current Path:", response.request.path)
 
-            assert(response.history[0].status_code == 308)
+            assert(response.history[0].status_code == 301)
             assert(response.request.path == "/user") 
             assert(session["UserId"] == 1) #testing if cookie is created
 
@@ -62,7 +62,7 @@ class Test_Login:
             print("History:", response.history)
             print("Current Path:", response.request.path)
 
-            assert(response.history[0].status_code == 308)
+            assert(response.history[0].status_code == 301)
             assert(response.request.path == "/user") 
             assert(session["UserId"] == 1)
 
