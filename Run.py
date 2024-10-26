@@ -1,6 +1,6 @@
-from Application import app
 import pytest
 import argparse
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--test", action="store_true")
@@ -11,9 +11,13 @@ if (__name__ == "__main__"):
     args = parser.parse_args()
 
     if (args.production == True):
+        from Application import app
         app.run()
     elif (args.test == True):
+        os.environ["TESTING"] = "True"
+        from Application import app
         pytest.main(["--rootdir=./Application/"])
     else:
+        from Application import app
         app.run(debug=True)
 
