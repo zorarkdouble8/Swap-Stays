@@ -74,7 +74,7 @@ def redirect_logged_in(user: User):
     #create cookie
     session["UserId"] = user.id
 
-    return redirect("/user")
+    return redirect("/user", 308)
 
 #checks the cookie to determine if there's a user logged in
 def is_logged_in() -> bool:

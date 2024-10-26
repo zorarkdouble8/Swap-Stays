@@ -1,4 +1,4 @@
-from Application import app, test_application
+from Application import app
 import pytest
 import argparse
 

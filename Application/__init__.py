@@ -23,6 +23,3 @@ app.secret_key = os.environ["COOKIE_KEY"]
 import Application.Models
 import Application.Routes
 import Application.API
-
-def test_application():
-    import Application.Tests.conftest
