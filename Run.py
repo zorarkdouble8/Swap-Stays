@@ -1,5 +1,9 @@
-from Application import app
+from Application import app, test_application
+import pytest
 
 #run the program
 if (__name__ == "__main__"):
-    app.run(debug=True)
+    #pytest.main()
+    pytest.main(["--rootdir=./Application/"])
+    #app.testing = True    
+    #app.run(debug=True)
