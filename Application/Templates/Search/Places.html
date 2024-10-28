@@ -8,7 +8,8 @@
     <h1>Available Places</h1>
     <ul>
         {% for place in places %}
-        <li>{{ place.place_name }} - {{ place.type }} - ${{ place.price }} per night</li>
+        <a href="/places/{{place.place_id}}">{{ place.place_name }} - {{ place.type }} - ${{ place.price }} per night</a>
+        <br/>
         {% endfor %}
     </ul>
     <a href="/add_place">Add a New Place</a>

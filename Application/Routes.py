@@ -5,6 +5,12 @@ from Application.Database_Funcs.User import verify_login, create_user
 from Application.Database_Funcs.Place import get_places, add_place
 from Application.Models import User
 
+@app.route("/places/<int:page_id>")
+def booking_page(page_id):
+    #get the page via the page id
+    #render template
+    print(page_id)
+    return "Test"
 
 @app.route("/")
 def home():
