@@ -2,6 +2,7 @@ from flask import render_template, request, redirect
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
+from Application.Database_Funcs.Place import get_places, add_place
 from Application.Models import User
 
 
@@ -64,7 +65,7 @@ def redirect_logged_in(user: User):
 def places():
     # Fetch all the places from the database
     places_list = get_places()
-    return render_template("Places/Places.html", places=places_list)
+    return render_template("Search/Places.html", places=places_list)
 
 # Route to add a new place
 @app.route("/add_place", methods=["GET", "POST"])
