@@ -75,7 +75,7 @@
         <p class="text-lg sm:text-xl mb-6 text-white">Find and book your perfect stay close to campus with ease!</p>
 
         <form method="POST">
-            <!-- Number of Guests Dropdown -->
+            <!-- number of guests dropdown -->
             <div class="dropdown mb-4">
                 <button type="button" onclick="toggleDropdown('numGuestsDropdown')" class="dropbtn">Number of guests</button>
                 <div id="numGuestsDropdown" class="dropdown-content">
@@ -91,31 +91,32 @@
                 <input type="hidden" id="num_guests" name="num_guests">
             </div>
 
-            <!-- Date Picker -->
+            <!-- date picker -->
             <label for="checkin" class="text-white">Check in</label>
             <input type="date" id="checkin" name="checkin">
             <label for="checkout" class="text-white">Check out</label>
             <input type="date" id="checkout" name="checkout">
 
-            <!-- Distance from Campus Dropdown -->
+            <!-- distance from campus dropdown -->
             <div class="dropdown mt-4">
                 <button type="button" onclick="toggleDropdown('distanceDropdown')" class="dropbtn">Distance from campus</button>
                 <div id="distanceDropdown" class="dropdown-content">
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', 'under 5 min')">Under 5 min</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '5 min')">5 min</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '10 min')">10 min</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '15 min')">15 min</a>
+                     <!-- distance in miles for database, in minutes for users -->
+                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '1')">Under 5 min</a>
+                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '2')">5 min</a>
+                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '3')">10 min</a>
+                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '4')">15 min</a>
                 </div>
                 <input type="hidden" id="miles_campus" name="miles_campus">
             </div>
 
-            <!-- Submit Button -->
+            <!-- submit button (TODO: center this) -->
             <button type="submit" class="flex mt-8 items-center justify-center bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">
                 Start Booking
             </button>
         </form>
 
-        <!-- Login Button -->
+        <!-- login button -->
         <a href="login">
             <button class="flex fixed top-10 right-10 bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">Login</button>
         </a>
@@ -128,14 +129,14 @@
             document.getElementById(dropdownId).classList.toggle("show");
         }
 
-        // Function to select dropdown option
+        // pause other activity and click an option
         function selectDropdownOption(event, inputId, value) {
-            event.preventDefault();  // Prevent navigation
-            document.getElementById(inputId).value = value;  // Set hidden input value
-            toggleDropdown(inputId + 'Dropdown');  // Close dropdown after selection
+            event.preventDefault();  
+            document.getElementById(inputId).value = value;  
+            toggleDropdown(inputId + 'Dropdown');
         }
 
-        // Close dropdown if the user clicks outside of it
+        // close dropdown
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn')) {
                 const dropdowns = document.getElementsByClassName("dropdown-content");
