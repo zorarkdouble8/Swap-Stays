@@ -42,7 +42,6 @@ class Place(db.Model):
         self.image_path = image_path
 
 # Create tables in the database
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        print("Database tables created.")
+with app.app_context():
+    db.create_all()
+    print("Database tables created.")

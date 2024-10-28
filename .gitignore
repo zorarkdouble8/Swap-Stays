@@ -1,3 +1,6 @@
+#test database
+Application/Test.db
+
 #Node.js
 node_modules
 
