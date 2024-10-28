@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Places</title>
+</head>
+<body>
+    <h1>Available Places</h1>
+    <ul>
+        {% for place in places %}
+        <li>{{ place.place_name }} - {{ place.type }} - ${{ place.price }} per night</li>
+        {% endfor %}
+    </ul>
+    <a href="/add_place">Add a New Place</a>
+</body>
+</html>
+
