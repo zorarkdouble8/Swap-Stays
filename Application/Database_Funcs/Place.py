@@ -37,11 +37,6 @@ def add_place(
         db.session.rollback()
         return None
 
-# Function to retrieve all places from the database
-# TODO: add error handling
-def get_places() -> Place:
-    return Place.query.all()
-
 # Function to add a new place to the database
 def add_place(
     place_name: str, place_type: str, price: float, amenities: str, 
