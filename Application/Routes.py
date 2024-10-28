@@ -1,11 +1,25 @@
-from flask import render_template, redirect, abort
+from flask import render_template, request, redirect, abort
 from Application import app
 from flask import request, session
-from Application.Database_Funcs.User import *
+from Application.Database_Funcs.User import verify_login, create_user
 from Application.Models import User
 
-@app.route("/")
+@app.route("/places/<int:place_id>")
+def booking_page(place_id):
+    #get the page via the page id
+    place = get_place(place_id=place_id)
+  
+    return render_template("Home/Booking.html", stay=place)
+
+@app.route("/", methods=["GET", "POST"])
 def home():
+    if (request.method == "POST"):
+        print("PARAMS: ", request.form["checkin"], request.form["checkout"], request.form["num_guests"], request.form["miles_campus"])
+
+        # Fetch all the places from the database
+        places_list = get_places()
+        return render_template("Search/Places.html", places=places_list)
+
     return render_template("Home/Home.html")
 
 #TODO replace username with the actual user's username?
@@ -82,3 +96,35 @@ def is_logged_in() -> bool:
         return True
     else:
         return False
+
+
+# Display a list of places
+@app.route("/places")
+def places():
+    # Fetch all the places from the database
+    places_list = get_places()
+    return render_template("Search/Places.html", places=places_list)
+
+# Route to add a new place
+@app.route("/add_place", methods=["GET", "POST"])
+def create_place():
+    error = None
+    if request.method == "POST":
+        # Retrieve form data
+        place_name = request.form["place_name"]
+        place_type = request.form["type"]
+        price = request.form["price"]
+        amenities = request.form["amenities"]
+        rating = request.form["rating"]
+        campus_distance = request.form["campus_distance"]
+
+        # Add the place to the database
+        did_add_place = add_place(place_name, place_type, price, amenities, rating, campus_distance)
+
+        if did_add_place:
+            return redirect("/places")
+        else:
+            error = "Failed to add the place. Please try again."
+
+    return render_template("Places/AddPlace.html", error=error)
+

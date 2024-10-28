@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 app.template_folder = "./Templates"
-app.static_folder = "./Static"
+app.static_folder = "./static"
 
 #DATABASE config
 if (os.environ["TESTING"] == "True"):
