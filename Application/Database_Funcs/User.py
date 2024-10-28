@@ -7,6 +7,32 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
+def get_user(id:int) -> User:
+    try:
+        user = db.session.get(User, id)
+        return user
+    except Exception as e:
+        print(e)
+        return None
+    
+# def get_user_username(username:str) -> User:
+#     try:
+#         user = db.session.query(User).filter_by(username = username).first()
+#         return user
+#     except Exception as e:
+#         print(e)
+#         return None
+    
+# #deletes a user via their id
+# def delete_user(username:str) -> None:
+#     try:
+#         user = get_user_username(username)
+#         db.session.delete(user)
+#         db.session.commit()
+#     except Exception as e:
+#         print(e)    
+#         return None
+
 #verifies the login and returns the user object
 #if unsuccessful, it returns none
 def verify_login(username, password) -> User:
@@ -14,7 +40,7 @@ def verify_login(username, password) -> User:
         user = db.session.query(User).filter_by(username = username).first()
     except Exception as e:
         print(e)
-        return False
+        return None
 
     if (user == None):
         return None

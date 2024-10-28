@@ -7,7 +7,11 @@ app.template_folder = "./Templates"
 app.static_folder = "./static"
 
 #DATABASE config
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Database.db"
+if (os.environ["TESTING"] == "True"):
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Test.db"
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Database.db"
+
 db = SQLAlchemy(app)
 
 #TEMPERORY SECRET KEY
@@ -22,3 +26,5 @@ app.secret_key = os.environ["COOKIE_KEY"]
 #init other stuff
 import Application.Models
 import Application.Routes
+import Application.Error_Routes
+import Application.API

@@ -1,8 +1,7 @@
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, abort
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
-from Application.Database_Funcs.Place import get_places, add_place, get_place
 from Application.Models import User
 
 @app.route("/places/<int:place_id>")
@@ -24,20 +23,31 @@ def home():
     return render_template("Home/Home.html")
 
 #TODO replace username with the actual user's username?
-@app.route("/username")
+@app.route("/user")
 def userHome():
-    return render_template("User/Home.html")
+    if ("UserId" in session):
+        user_id = session["UserId"]
+
+        user = get_user(user_id)
+
+        return render_template("User/Home.html", user=user)
+    else:
+        print("Not logged in!")
+
+        abort(404)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     error = None
+
+    if (is_logged_in()):
+        return redirect("/user")
 
     if (request.method == "POST"):
         user = verify_login(request.form["username"], request.form["password"])
         if (user == None):
             error = "Error: wrong password or username"
         else:
-            session["UserId"] = user.id
             return redirect_logged_in(user)
     
     return render_template("Login/Login.html", error=error)
@@ -45,6 +55,10 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
     error = None
+
+    if (is_logged_in()):
+        return redirect("/user")
+
     if (request.method == "POST"):
         #Create a user!
         username = request.form["username"]
@@ -71,7 +85,18 @@ def createUser():
 #returns: render template
 def redirect_logged_in(user: User):
     print("User: ", user)
-    return render_template("User/Home.html", user=user)
+    #create cookie
+    session["UserId"] = user.id
+
+    return redirect("/user", 301)
+
+#checks the cookie to determine if there's a user logged in
+def is_logged_in() -> bool:
+    if ("UserId" in session):
+        return True
+    else:
+        return False
+
 
 # Display a list of places
 @app.route("/places")
