@@ -73,12 +73,12 @@
         </nav>   
         <h1 class="text-left font-bold text-3xl headColor  mb-4">{{ stay.name }}</h1>   
         <div class="flex flex-nowrap space-x-4 mb-4">    
-            <img src="{{ stay.image }}" alt="{{ stay.name }}" width="400" height="350" class="rounded-lg">
+            <img src="{{ url_for('static', filename=stay.image_path) }}" alt="{{ stay.place_name }}" width="400" height="350" class="rounded-lg">
             <div class="text-center">
                 <h2 class="underline headColor text-xL">Star Rating</h2>
         
                 {% for i in range(1, 6) %}
-                    {% if i <= stay.star_review %}
+                    {% if i <= stay.rating %}
                         <span class="fa fa-star checked"></span>
                     {%else%}
                         <span class="fa fa-star"></span>
@@ -87,12 +87,13 @@
                     
                     <h3 class="text-xl headColor underline">Description</h3>
                     <div class="textColor">
-                    {% for i in stay.description.split(', ') %}
+                    <p class="text-center textColor mb-2">TODO: add description</p>
+                    <!--{ for i in stay.description.split(', ') %}
                         <p class="text-center textColor mb-2">- {{i}}</p>
-                    {% endfor %}
+                    { endfor %}-->
                     </div>
                 <!--Book Now button, will navigate to a page to book and put in payment and reservation info-->
-                <a href="{{ url_for('booking', stay_id=stay.id) }}" class="bg-blue-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded">
+                <a href="" class="bg-blue-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded">
                     Book Now
                 </a>
             </div>
@@ -118,7 +119,7 @@
         {% endfor %}
         <!--Add a review-->
         <p class="text-left headColor font-bold">Add a review:</p>
-        <form action="{{ url_for('add_review', stay_id=stay.id) }}" method="POST">
+        <form action="{ url_for('add_review', stay_id=stay.id) }" method="POST">
             <textarea id="review" rows="3" cols ="50" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
             <div class="text-left">
                 <input type="submit" class="bg-blue-500 text-left hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-1 px-2 rounded" value="Submit">

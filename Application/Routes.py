@@ -2,15 +2,15 @@ from flask import render_template, request, redirect
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
-from Application.Database_Funcs.Place import get_places, add_place
+from Application.Database_Funcs.Place import get_places, add_place, get_place
 from Application.Models import User
 
-@app.route("/places/<int:page_id>")
-def booking_page(page_id):
+@app.route("/places/<int:place_id>")
+def booking_page(place_id):
     #get the page via the page id
-    #render template
-    print(page_id)
-    return "Test"
+    place = get_place(place_id=place_id)
+  
+    return render_template("Home/Booking.html", stay=place)
 
 @app.route("/")
 def home():

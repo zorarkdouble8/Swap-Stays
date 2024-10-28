@@ -7,6 +7,10 @@ from datetime import date
 def get_places() -> Place:
     return Place.query.all()
 
+# TODO: add error handling
+def get_place(place_id: int) -> Place:
+    return db.session.get_one(Place, place_id)
+
 # Function to add a new place to the database
 def add_place(
     place_name: str, place_type: str, price: float, amenities: str, 
