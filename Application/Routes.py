@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, abort
 from Application import app
 from flask import request, session
-from Application.Database_Funcs.User import verify_login, create_user
+from Application.Database_Funcs.User import *
+from Application.Database_Funcs.Place import *
 from Application.Models import User
 
 @app.route("/places/<int:place_id>")
