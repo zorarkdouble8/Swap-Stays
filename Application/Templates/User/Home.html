@@ -1,2 +1,10 @@
 <!DOCTYPE html>
-<h1>Welcome {{ user.username }}!</h1>
+<head>
+    <script type="text/javascript" src="{{url_for('static', filename='User/logout_button.js')}}"></script>
+</head>
+<body>
+    <h1>Welcome {{ user.username }}!</h1>
+
+    <h2 id="Info"></h2>
+    <button id="Logout" onclick="logout()">Logout</button>
+</body>
