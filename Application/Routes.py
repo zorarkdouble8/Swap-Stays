@@ -1,9 +1,10 @@
 from flask import render_template, request, redirect
 from Application import app
-from flask import request, session
+from flask import request, session, jsonify
 from Application.Database_Funcs.User import verify_login, create_user
 from Application.Database_Funcs.Place import get_places, add_place
 from Application.Models import User
+from datetime import date, timedelta
 
 
 @app.route("/")
@@ -90,30 +91,27 @@ def create_place():
 
     return render_template("Places/AddPlace.html", error=error)
 
+
 @app.route('/search', methods=['GET'])
-def search_places():
-    # Get the number of guests from the query parameters
-    num_guests = request.args.get('guests', type=int)
+def search():
+    # Retrieve parameters from the request, using None as default if not provided
+    guests = request.args.get('guests', type=int)
+    from_nights = request.args.get('fromNights', type=int)
+    to_nights = request.args.get('toNights', type=int)
+    amenities = request.args.get('amenities')
 
-    # Validate the input
-    if num_guests is None or num_guests <= 0:
-        return jsonify({"error": "Invalid number of guests provided."}), 400
+    # Call search_places with parameters, allowing them to be None if not provided
+    results = search_places(guests=guests, from_nights=from_nights, to_nights=to_nights, amenities=amenities)
 
-    # Query the database for places that can accommodate the specified number of guests
-    results = Place.query.filter(Place.guests_num >= num_guests).all()
-
-    # Format the results for the response
-    places_data = [{
-        "place_name": place.place_name,
-        "place_type": place.place_type,
-        "price": place.price,
-        "amenities": place.amenities,
-        "rating": place.rating,
-        "campus_distance": place.campus_distance,
-        "guests_num": place.guests_num,
-        "available_from": place.available_from,
-        "available_to": place.available_to,
-        "image_path": place.image_path
-    } for place in results]
-
-    return jsonify(places_data), 200
+    # Convert results to JSON format
+    return jsonify([{
+        'place_name': place.place_name,
+        'place_type': place.place_type,
+        'price': place.price,
+        'amenities': place.amenities,
+        'rating': place.rating,
+        'campus_distance': place.campus_distance,
+        'guests_num': place.guests_num,
+        'available_from': place.available_from,
+        'available_to': place.available_to
+    } for place in results])
