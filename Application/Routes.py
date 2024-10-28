@@ -129,3 +129,23 @@ def create_place():
 
     return render_template("Places/AddPlace.html", error=error)
 
+@app.route('/transaction', methods=['GET', 'POST'])
+def transaction():
+    if request.method == 'POST':
+        checkin = request.form.get('checkin')
+        checkout = request.form.get('checkout')
+        num_guests = request.form.get('num_guests')
+        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
+
+    return render_template('/Home/Transaction.html')
+
+@app.route('/process_transaction', methods=['POST'])
+def process_transaction():
+    name = request.form.get('name')
+    checkin_date = request.form.get('checkin_date')
+    checkout_date = request.form.get('checkout_date')
+    guests = request.form.get('guests')
+    credit_card = request.form.get('credit_card')
+    price = request.form.get('price')
+    
+    return f"Transaction completed for {name}."
