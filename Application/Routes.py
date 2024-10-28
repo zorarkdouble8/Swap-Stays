@@ -89,3 +89,30 @@ def create_place():
 
     return render_template("Places/AddPlace.html", error=error)
 
+@app.route('/search', methods=['GET'])
+def search_places():
+    # Get the number of guests from the query parameters
+    num_guests = request.args.get('guests', type=int)
+
+    # Validate the input
+    if num_guests is None or num_guests <= 0:
+        return jsonify({"error": "Invalid number of guests provided."}), 400
+
+    # Query the database for places that can accommodate the specified number of guests
+    results = Place.query.filter(Place.guests_num >= num_guests).all()
+
+    # Format the results for the response
+    places_data = [{
+        "place_name": place.place_name,
+        "place_type": place.place_type,
+        "price": place.price,
+        "amenities": place.amenities,
+        "rating": place.rating,
+        "campus_distance": place.campus_distance,
+        "guests_num": place.guests_num,
+        "available_from": place.available_from,
+        "available_to": place.available_to,
+        "image_path": place.image_path
+    } for place in results]
+
+    return jsonify(places_data), 200
