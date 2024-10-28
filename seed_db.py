@@ -1,8 +1,9 @@
 import random
+from datetime import datetime, timedelta
 from Application import db, app
 from Application.Models import Place
 
-# Hotel data (already included)
+# Hotel data
 luxury_hotels = [
     "Hilton Garden Inn", "Marriott Downtown", "Hyatt Place", "The Westin Suites",
     "DoubleTree by Hilton", "Courtyard by Marriott", "Renaissance Hotel",
@@ -17,7 +18,7 @@ mid_range_hotels = [
     "Comfort Suites", "Fairfield Inn & Suites by Marriott", "La Quinta Inn & Suites",
     "Country Inn & Suites", "Best Western Gateway Grand", "Wingate by Wyndham",
     "Sleep Inn & Suites", "Quality Inn University", "Baymont by Wyndham",
-    "Holiday Inn University"
+    "Holiday Inn University", "Reitz Union Hotel - University of Florida"
 ]
 
 budget_hotels = [
@@ -54,57 +55,96 @@ def random_distance():
 def random_rating():
     return round(random.uniform(3.0, 5.0), 1)
 
+# Generate a random start date and availability period between 3 months and 300 days
+def random_date_range():
+    # Define the start date in 2024 and end date in 2025
+    start_date = datetime(2024, 10, 1)
+    end_date = datetime(2025, 10, 31)
+    
+    # Calculate the total number of days between the two dates
+    total_days = (end_date - start_date).days
+
+    # Generate a random start date that is always in 2024
+    random_start = start_date + timedelta(days=random.randint(0, (datetime(2024, 12, 31) - start_date).days))
+    
+    # Generate a random duration for availability: between 90 days (3 months) and 300 days
+    random_duration = timedelta(days=random.randint(90, 300))
+    
+    # Calculate the random end date, making sure it doesn't exceed the defined end date
+    random_end = random_start + random_duration
+    if random_end > end_date:
+        random_end = end_date
+
+    return random_start, random_end
+
 # Seed function
 def seed_places():
     places = []
 
-    # Luxury Hotels: $200 to $500
+    # Luxury Hotels: $200 to $500, 2-4 guests
     for hotel in luxury_hotels:
+        available_from, available_to = random_date_range()
         places.append(Place(
             place_name=hotel,
             place_type="Hotel",
             price=random.uniform(200, 500),
             amenities=", ".join(random.sample(amenities_list, k=3)),  # 3 random amenities
             rating=random_rating(),
-            campus_distance=random_distance()
+            campus_distance=random_distance(),
+            guests_num=random.randint(2, 4),
+            available_from=available_from.date(),  # Using date() to extract only the date part
+            available_to=available_to.date()
         ))
 
-    # Mid-Range Hotels: $100 to $200
+    # Mid-Range Hotels: $100 to $200, 2-4 guests
     for hotel in mid_range_hotels:
+        available_from, available_to = random_date_range()
         places.append(Place(
             place_name=hotel,
             place_type="Hotel",
             price=random.uniform(100, 200),
             amenities=", ".join(random.sample(amenities_list, k=2)),  # 2 random amenities
             rating=random_rating(),
-            campus_distance=random_distance()
+            campus_distance=random_distance(),
+            guests_num=random.randint(2, 4),
+            available_from=available_from.date(),
+            available_to=available_to.date()
         ))
 
-    # Budget-Friendly Hotels: $50 to $100
+    # Budget-Friendly Hotels: $50 to $100, 2-4 guests
     for hotel in budget_hotels:
+        available_from, available_to = random_date_range()
         places.append(Place(
             place_name=hotel,
             place_type="Hotel",
             price=random.uniform(50, 100),
             amenities=", ".join(random.sample(amenities_list, k=1)),  # 1 random amenity
             rating=random_rating(),
-            campus_distance=random_distance()
+            campus_distance=random_distance(),
+            guests_num=random.randint(2, 4),
+            available_from=available_from.date(),
+            available_to=available_to.date()
         ))
 
-    # Airbnb Listings: $25 to $150
+    # Airbnb Listings: $25 to $150, 2-6 guests
     for airbnb in airbnbs:
+        available_from, available_to = random_date_range()
         places.append(Place(
             place_name=airbnb,
             place_type="Airbnb",
             price=random.uniform(25, 150),
             amenities=", ".join(random.sample(amenities_list, k=2)),  # 2 random amenities
             rating=random_rating(),
-            campus_distance=random_distance()
+            campus_distance=random_distance(),
+            guests_num=random.randint(2, 6),
+            available_from=available_from.date(),
+            available_to=available_to.date()
         ))
 
     # Add all places to session and commit
-    db.session.bulk_save_objects(places)
-    db.session.commit()
+    with app.app_context():
+        db.session.bulk_save_objects(places)
+        db.session.commit()
 
 # Execute seed function
 if __name__ == '__main__':
