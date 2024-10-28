@@ -1,9 +1,16 @@
-from flask import render_template, redirect
+from flask import render_template, request, redirect
 from Application import app
 from flask import request, session
 from Application.Database_Funcs.User import verify_login, create_user
-from Application.Database_Funcs.Place import get_places, add_place
+from Application.Database_Funcs.Place import get_places, add_place, get_place
 from Application.Models import User
+
+@app.route("/places/<int:place_id>")
+def booking_page(place_id):
+    #get the page via the page id
+    place = get_place(place_id=place_id)
+  
+    return render_template("Home/Booking.html", stay=place)
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -66,7 +73,14 @@ def redirect_logged_in(user: User):
     print("User: ", user)
     return render_template("User/Home.html", user=user)
 
-# Route to add a new place TODO, have it only available if a user is logged in
+# Display a list of places
+@app.route("/places")
+def places():
+    # Fetch all the places from the database
+    places_list = get_places()
+    return render_template("Search/Places.html", places=places_list)
+
+# Route to add a new place
 @app.route("/add_place", methods=["GET", "POST"])
 def create_place():
     error = None
@@ -88,3 +102,4 @@ def create_place():
             error = "Failed to add the place. Please try again."
 
     return render_template("Places/AddPlace.html", error=error)
+
