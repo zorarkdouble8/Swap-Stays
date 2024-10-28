@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+<style>
+    .backgroundBlue {
+        background-color: #2e4775;
+    }
+    .textColor {
+        color: #eb8560;
+    }
+</style>
+
+<body class="font-serif backgroundBlue min-h-screen">
+    <div class="container mx-auto p-5">
+        <h1 class="text-center font-bold text-3xl textColor mb-5">Transaction Details</h1>
+        
+        <form action="/process_transaction" method="POST" class="bg-white p-5 rounded-lg shadow-md">
+            <div class="mb-4">
+                <label for="name" class="block text-lg textColor">Contact Info:</label>
+                <input type="text" id="name" name="name" required class="mt-1 p-2 border rounded w-full" placeholder="Name">
+                <input type="text" id="phone-number" name="phone-number" required class="mt-1 p-2 border rounded w-full" placeholder="Phone Number">
+                <input type="text" id="e-mail" name="e-mail" required class="mt-1 p-2 border rounded w-full" placeholder="E-mail">
+            </div>
+    
+            <div class="mb-4">
+                <label for="credit_card" class="block text-lg textColor">Credit Card Info:</label>
+                <input type="text" id="card-number" name="card-number" required class="mt-1 p-2 border rounded w-full" placeholder="Card Number">
+                <input type="text" id="ccv" name="ccv" required class="mt-1 p-2 border rounded w-full" placeholder="CCV">
+                <input type="text" id="expiration-date" name="expiration-date" required class="mt-1 p-2 border rounded w-full" placeholder="Expiration Date">
+            </div>
+            <div class="mb-4">
+                <label for="price" class="block text-lg textColor">Total Price:</label>
+                <input type="text" id="price" name="price" readonly class="mt-1 p-2 border rounded w-full" value="$100.00">
+            </div>
+
+            <h2 class="text-lg textColor">Booking Summary</h2>
+            <p>Check-in date: {{ checkin }}</p>
+            <p>Check-out date: {{ checkout }}</p>
+            <p>Number of guests: {{ num_guests }}</p>
+
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded">Complete Transaction</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
