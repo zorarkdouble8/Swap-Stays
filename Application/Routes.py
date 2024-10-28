@@ -1,18 +1,20 @@
 from flask import render_template, request, redirect, abort
 from Application import app
-from flask import request, session
-from Application.Database_Funcs.User import *
-from Application.Database_Funcs.Place import *
+from flask import request, session, jsonify
+from Application.Database_Funcs.User import verify_login, create_user
+from Application.Database_Funcs.Place import get_places, add_place
 from Application.Models import User
+from datetime import date, timedelta
+
 
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
     #get the page via the page id
     place = get_place(place_id=place_id)
-  
+
     return render_template("Home/Booking.html", stay=place)
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def home():
     if (request.method == "POST"):
         print("PARAMS: ", request.form["checkin"], request.form["checkout"], request.form["num_guests"], request.form["miles_campus"])
@@ -52,6 +54,27 @@ def login():
             return redirect_logged_in(user)
     
     return render_template("Login/Login.html", error=error)
+
+@app.route('/transaction', methods=['GET', 'POST'])
+def transaction():
+    if request.method == 'POST':
+        checkin = request.form.get('checkin')
+        checkout = request.form.get('checkout')
+        num_guests = request.form.get('num_guests')
+        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
+
+    return render_template('/Home/Transaction.html')
+
+@app.route('/process_transaction', methods=['POST'])
+def process_transaction():
+    name = request.form.get('name')
+    checkin_date = request.form.get('checkin_date')
+    checkout_date = request.form.get('checkout_date')
+    guests = request.form.get('guests')
+    credit_card = request.form.get('credit_card')
+    price = request.form.get('price')
+
+    return f"Transaction completed for {name}."
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
@@ -129,23 +152,27 @@ def create_place():
 
     return render_template("Places/AddPlace.html", error=error)
 
-@app.route('/transaction', methods=['GET', 'POST'])
-def transaction():
-    if request.method == 'POST':
-        checkin = request.form.get('checkin')
-        checkout = request.form.get('checkout')
-        num_guests = request.form.get('num_guests')
-        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
 
-    return render_template('/Home/Transaction.html')
+@app.route('/search', methods=['GET'])
+def search():
+    # Retrieve parameters from the request, using None as default if not provided
+    guests = request.args.get('guests', type=int)
+    from_nights = request.args.get('fromNights', type=int)
+    to_nights = request.args.get('toNights', type=int)
+    amenities = request.args.get('amenities')
 
-@app.route('/process_transaction', methods=['POST'])
-def process_transaction():
-    name = request.form.get('name')
-    checkin_date = request.form.get('checkin_date')
-    checkout_date = request.form.get('checkout_date')
-    guests = request.form.get('guests')
-    credit_card = request.form.get('credit_card')
-    price = request.form.get('price')
-    
-    return f"Transaction completed for {name}."
+    # Call search_places with parameters, allowing them to be None if not provided
+    results = search_places(guests=guests, from_nights=from_nights, to_nights=to_nights, amenities=amenities)
+
+    # Convert results to JSON format
+    return jsonify([{
+        'place_name': place.place_name,
+        'place_type': place.place_type,
+        'price': place.price,
+        'amenities': place.amenities,
+        'rating': place.rating,
+        'campus_distance': place.campus_distance,
+        'guests_num': place.guests_num,
+        'available_from': place.available_from,
+        'available_to': place.available_to
+    } for place in results])
