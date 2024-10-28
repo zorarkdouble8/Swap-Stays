@@ -1,10 +1,11 @@
 from flask import render_template, request, redirect, abort
 from Application import app
 from flask import request, session, jsonify
-from Application.Database_Funcs.User import verify_login, create_user
-from Application.Database_Funcs.Place import get_places, add_place
+from Application.Database_Funcs.User import *
+from Application.Database_Funcs.Place import *
 from Application.Models import User
 from datetime import date, timedelta
+
 
 
 @app.route("/places/<int:place_id>")
@@ -14,7 +15,8 @@ def booking_page(place_id):
 
     return render_template("Home/Booking.html", stay=place)
 
-@app.route("/")
+
+@app.route("/", methods=["GET", "POST"])
 def home():
     if (request.method == "POST"):
         print("PARAMS: ", request.form["checkin"], request.form["checkout"], request.form["num_guests"], request.form["miles_campus"])
@@ -164,15 +166,5 @@ def search():
     # Call search_places with parameters, allowing them to be None if not provided
     results = search_places(guests=guests, from_nights=from_nights, to_nights=to_nights, amenities=amenities)
 
-    # Convert results to JSON format
-    return jsonify([{
-        'place_name': place.place_name,
-        'place_type': place.place_type,
-        'price': place.price,
-        'amenities': place.amenities,
-        'rating': place.rating,
-        'campus_distance': place.campus_distance,
-        'guests_num': place.guests_num,
-        'available_from': place.available_from,
-        'available_to': place.available_to
-    } for place in results])
+    # Pass results to the places.html template
+    return render_template("Search/Places.html", places=results)
