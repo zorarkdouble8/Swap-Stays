@@ -17,7 +17,7 @@ class User(db.Model):
 # Place Model
 class Place(db.Model):
     __tablename__ = 'places'
-    place_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    place_id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)
     place_name = db.Column(db.String(100), nullable=False)
     place_type = db.Column(db.String(50), nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
@@ -28,6 +28,7 @@ class Place(db.Model):
     available_from = db.Column(db.Date, nullable=False)
     available_to = db.Column(db.Date, nullable=False)
     image_path = db.Column(db.String(255), nullable=True)  # Path to image
+    reviews = db.relationship('Review', backref='Review.place_id', primaryjoin='Place.place_id==Review.place_id')
 
     def __init__(self, place_name, place_type, price, amenities, rating, campus_distance, guests_num, available_from, available_to, image_path=None):
         self.place_name = place_name
@@ -45,15 +46,15 @@ class Place(db.Model):
 class Review(db.Model):
     __tablename__ = "review"
 
-    id = db.Column(db.Integer, unique=True, primary_key=True, nullable=False)
-    placeId = db.Column(db.Integer, db.ForeignKey("places.place_id"),nullable=False)
-    Review = db.Column(db.Text, nullable=False)
-    Stars = db.Column(db.Numeric(3, 2), nullable=False)
+    id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)
+    place_id = db.Column(db.Integer, db.ForeignKey("places"), nullable=False)
+    review = db.Column(db.Text, nullable=False)
+    stars = db.Column(db.Numeric(3, 2), nullable=False)
 
-    def __init__(self, placeId, review, stars):
-        self.placeId = placeId
-        self.Review = review
-        self.Stars = stars
+    def __init__(self, place_id, review, stars):
+        self.place_id = place_id
+        self.review = review
+        self.stars = stars
 
 # Create tables in the database
 with app.app_context():

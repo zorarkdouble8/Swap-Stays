@@ -1,9 +1,10 @@
 import os
 import random
 from datetime import datetime, timedelta
+os.environ["TESTING"] = "False"
 from Application import db, app
 from Application.Models import Place
-from bing_image_downloader import downloader  # Ensure bing_image_downloader is installed
+#from bing_image_downloader import downloader  # Ensure bing_image_downloader is installed
 
 # Hotel and Airbnb data
 luxury_hotels = [

@@ -11,13 +11,16 @@ from datetime import date, timedelta
 def booking_page(place_id):
     #get the page via the page id
     place = get_place(place_id=place_id)
+    user = get_user_obj()
 
-    return render_template("Home/Booking.html", stay=place)
+
+    #print(place.)
+
+    return render_template("Home/Booking.html", stay=place, user=user)
 
 @app.route("/places/add_review/<int:stay_id>", methods=["POST"])
 def add_review_route(stay_id):
     #add review
-    print(request.form["review_stars"])
     add_review(stay_id, request.form["review_text"], request.form["review_stars"])
 
     #refresh page
@@ -130,6 +133,15 @@ def is_logged_in() -> bool:
         return True
     else:
         return False
+
+#if the user is logged in, this retrns the user object, else it returns none
+def get_user_obj() -> User:
+    if ("UserId" in session):
+        user_id = session["UserId"]
+
+        return get_user(user_id)
+    
+    return None
 
 # Display a list of places
 @app.route("/places")

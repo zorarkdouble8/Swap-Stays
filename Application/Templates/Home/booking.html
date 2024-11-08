@@ -111,13 +111,13 @@
         <h1 class="text-left font-bold text-3xl headColor  mb-4 underline">Reviews</h1>
         {% for review in stay.reviews %}
             <dl>
-                <dt class="text-xl textColor">- {{review.user}}</dt>
-                <dd class="textColor ml-4">- {{review.opinion}}</dd>
-
+                <dt class="text-xl textColor">- {review.user}</dt>
+                <dd class="textColor ml-4">- {{review.review}}</dd>
                 <!--I am thinking we have a link to view more reviews... but we need a reviews database for that as well-->
             </dl>
         {% endfor %}
-        <!--Add a review-->
+        <!--Add a review if a user is logged in-->
+        {% if user != (null or None) %}
         <p class="text-left headColor font-bold">Add a review:</p>
         <form action="add_review/{{stay.place_id}}" method="POST">
             <textarea name="review_text" id="review" rows="3" cols ="50" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
@@ -127,8 +127,12 @@
                 <input type="submit" class="bg-blue-500 text-left hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-1 px-2 rounded" value="Submit">
             </div>
         </form> 
-            <!--end add review-->
-    </div> 
+        {% else %}    
+        <!--If user isn't logged in-->
+        <p class="bg-blue-500">To add a review, create a account!</p>
+        <!--end add review-->
+        {% endif %}
+    </div>  
     
 
 </body>
