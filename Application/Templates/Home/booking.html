@@ -111,7 +111,7 @@
         <h1 class="text-left font-bold text-3xl headColor  mb-4 underline">Reviews</h1>
         {% for review in stay.reviews %}
             <dl>
-                <dt class="text-xl textColor">- {review.user}</dt>
+                <dt class="text-xl textColor">- {{review.username}}</dt>
                 <dd class="textColor ml-4">- {{review.review}}</dd>
                 <!--I am thinking we have a link to view more reviews... but we need a reviews database for that as well-->
             </dl>

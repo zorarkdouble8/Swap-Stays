@@ -13,15 +13,20 @@ def booking_page(place_id):
     place = get_place(place_id=place_id)
     user = get_user_obj()
 
-
     #print(place.)
 
     return render_template("Home/Booking.html", stay=place, user=user)
 
 @app.route("/places/add_review/<int:stay_id>", methods=["POST"])
 def add_review_route(stay_id):
+    user = get_user_obj()
+
+    if (user == None):
+        #Do nothing, user is not logged in
+        return redirect("/places/" + str(stay_id), code = 301)
+
     #add review
-    add_review(stay_id, request.form["review_text"], request.form["review_stars"])
+    add_review(stay_id, user, request.form["review_text"], request.form["review_stars"])
 
     #refresh page
     return redirect("/places/" + str(stay_id), code = 301)

@@ -8,6 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=True)
+    reviews = db.relationship('Review', backref='Review.user_id', primaryjoin='User.id==Review.user_id')
     
     def __init__(self, username, password, email=None):
         self.username = username
@@ -47,12 +48,16 @@ class Review(db.Model):
     __tablename__ = "review"
 
     id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)
-    place_id = db.Column(db.Integer, db.ForeignKey("places"), nullable=False)
+    place_id = db.Column(db.Integer, db.ForeignKey("places.place_id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
     review = db.Column(db.Text, nullable=False)
     stars = db.Column(db.Numeric(3, 2), nullable=False)
 
-    def __init__(self, place_id, review, stars):
+    def __init__(self, place_id, user_id, username, review, stars):
         self.place_id = place_id
+        self.user_id = user_id
+        self.username = username
         self.review = review
         self.stars = stars
 
