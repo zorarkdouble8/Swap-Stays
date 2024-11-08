@@ -3,10 +3,9 @@ from Application import app
 from flask import request, session, jsonify
 from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
+from Application.Database_Funcs.Review import *
 from Application.Models import User
 from datetime import date, timedelta
-
-
 
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
@@ -14,6 +13,15 @@ def booking_page(place_id):
     place = get_place(place_id=place_id)
 
     return render_template("Home/Booking.html", stay=place)
+
+@app.route("/places/add_review/<int:stay_id>", methods=["POST"])
+def add_review_route(stay_id):
+    #add review
+    print(request.form["review_stars"])
+    add_review(stay_id, request.form["review_text"], request.form["review_stars"])
+
+    #refresh page
+    return redirect("/places/" + str(stay_id), code = 301)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -122,7 +130,6 @@ def is_logged_in() -> bool:
         return True
     else:
         return False
-
 
 # Display a list of places
 @app.route("/places")

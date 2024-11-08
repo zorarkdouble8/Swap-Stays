@@ -71,7 +71,7 @@
             </div>
             <!-- end login -->
         </nav>   
-        <h1 class="text-left font-bold text-3xl headColor  mb-4">{{ stay.name }}</h1>   
+        <h1 class="text-left font-bold text-3xl headColor  mb-4">{{ stay.place_name }}</h1>   
         <div class="flex flex-nowrap space-x-4 mb-4">    
             <img src="{{ url_for('static', filename=stay.image_path) }}" alt="{{ stay.place_name }}" width="400" height="350" class="rounded-lg">
             <div class="text-center">
@@ -105,7 +105,7 @@
                 <path d="M18 11.034C18 14.897 12 19 12 19s-6-4.103-6-7.966C6 7.655 8.819 5 12 5s6 2.655 6 6.034Z" />
                 <path d="M14 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
             </svg>
-            {{ stay.location }}
+            { stay.location TODO }
         </dd>
 
         <h1 class="text-left font-bold text-3xl headColor  mb-4 underline">Reviews</h1>
@@ -119,8 +119,10 @@
         {% endfor %}
         <!--Add a review-->
         <p class="text-left headColor font-bold">Add a review:</p>
-        <form action="{ url_for('add_review', stay_id=stay.id) }" method="POST">
-            <textarea id="review" rows="3" cols ="50" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
+        <form action="add_review/{{stay.place_id}}" method="POST">
+            <textarea name="review_text" id="review" rows="3" cols ="50" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
+            <!--Insert review stars here with name="review_stars"-->
+            <input type="hidden" value="3" name="review_stars"></input>
             <div class="text-left">
                 <input type="submit" class="bg-blue-500 text-left hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-1 px-2 rounded" value="Submit">
             </div>

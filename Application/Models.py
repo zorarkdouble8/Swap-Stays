@@ -8,7 +8,7 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=True)
-
+    
     def __init__(self, username, password, email=None):
         self.username = username
         self.password = password
@@ -40,6 +40,20 @@ class Place(db.Model):
         self.available_from = available_from
         self.available_to = available_to
         self.image_path = image_path
+
+# Review Model
+class Review(db.Model):
+    __tablename__ = "review"
+
+    id = db.Column(db.Integer, unique=True, primary_key=True, nullable=False)
+    placeId = db.Column(db.Integer, db.ForeignKey("places.place_id"),nullable=False)
+    Review = db.Column(db.Text, nullable=False)
+    Stars = db.Column(db.Numeric(3, 2), nullable=False)
+
+    def __init__(self, placeId, review, stars):
+        self.placeId = placeId
+        self.Review = review
+        self.Stars = stars
 
 # Create tables in the database
 with app.app_context():
