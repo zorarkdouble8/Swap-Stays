@@ -8,8 +8,9 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=True)
-    reviews = db.relationship('Review', backref='Review.user_id', primaryjoin='User.id==Review.user_id')
-    
+    # Relationship to reviews
+    reviews = db.relationship('Review', backref='user', lazy=True)
+
     def __init__(self, username, password, email=None):
         self.username = username
         self.password = password
@@ -29,9 +30,11 @@ class Place(db.Model):
     available_from = db.Column(db.Date, nullable=False)
     available_to = db.Column(db.Date, nullable=False)
     image_path = db.Column(db.String(255), nullable=True)  # Path to image
-    reviews = db.relationship('Review', backref='Review.place_id', primaryjoin='Place.place_id==Review.place_id')
+    address = db.Column(db.String(255), nullable=True)
+    # Relationship to reviews
+    reviews = db.relationship('Review', backref='place', lazy=True)
 
-    def __init__(self, place_name, place_type, price, amenities, rating, campus_distance, guests_num, available_from, available_to, image_path=None):
+    def __init__(self, place_name, place_type, price, amenities, rating, campus_distance, guests_num, available_from, available_to, image_path=None, address=None):
         self.place_name = place_name
         self.place_type = place_type
         self.price = price
@@ -42,10 +45,11 @@ class Place(db.Model):
         self.available_from = available_from
         self.available_to = available_to
         self.image_path = image_path
+        self.address = address  # Initialize the address attribute
 
 # Review Model
 class Review(db.Model):
-    __tablename__ = "review"
+    __tablename__ = "reviews"  # Changed to plural for consistency
 
     id = db.Column(db.Integer, unique=True, primary_key=True, autoincrement=True)
     place_id = db.Column(db.Integer, db.ForeignKey("places.place_id"), nullable=False)
