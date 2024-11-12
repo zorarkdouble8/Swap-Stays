@@ -192,20 +192,3 @@ def search():
 
     # Pass results to the places.html template
     return render_template("Search/Places.html", places=results)
-
-@app.route('/places/<int:place_id>/add_review', methods=['GET', 'POST'])
-def add_review(place_id):
-    if request.method == 'POST':
-        review_text = request.form.get('review')
-        stars = request.form.get('stars', type=float)
-        user_id = session.get('UserId')  # Assuming the user is logged in and the ID is stored in session
-
-        if user_id and review_text and stars:
-            new_review = add_review(place_id, user_id, review_text, stars)
-            if new_review:
-                return redirect(f'/places/{place_id}')
-        else:
-            error = "Missing information or user not logged in."
-            return render_template('Error.html', error=error)
-
-    return render_template('Review/AddReview.html', place_id=place_id)
