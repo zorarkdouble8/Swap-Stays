@@ -6,15 +6,12 @@ from Application.Database_Funcs.Place import *
 from Application.Models import User
 from datetime import date, timedelta
 
-
-
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
     #get the page via the page id
     place = get_place(place_id=place_id)
 
     return render_template("Home/Booking.html", stay=place)
-
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -57,26 +54,30 @@ def login():
     
     return render_template("Login/Login.html", error=error)
 
-@app.route('/transaction', methods=['GET', 'POST'])
-def transaction():
-    if request.method == 'POST':
+@app.route('/places/<int:place_id>/transaction', methods=['GET', 'POST'])
+def transaction(place_id):
+    place = get_place(place_id)
+
+    if (request.method == 'POST'):
+        #perform transaction
+
+        #TODO: perform error detection!
+        name = request.form.get("name")
+        phone_num = request.form.get("phone-number")
+        email = request.form.get("email")
+        credit_card = request.form.get("credit-card")
+        ccv = request.form.get("ccv")
+        expiration_date = request.form.get("expiration-date")
+        total_price = request.form.get("price")
+
+
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
         num_guests = request.form.get('num_guests')
-        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
 
-    return render_template('/Home/Transaction.html')
+        return f"Transaction completed for {name}."
 
-@app.route('/process_transaction', methods=['POST'])
-def process_transaction():
-    name = request.form.get('name')
-    checkin_date = request.form.get('checkin_date')
-    checkout_date = request.form.get('checkout_date')
-    guests = request.form.get('guests')
-    credit_card = request.form.get('credit_card')
-    price = request.form.get('price')
-
-    return f"Transaction completed for {name}."
+    return render_template('/Home/Transaction.html', place=place)
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
