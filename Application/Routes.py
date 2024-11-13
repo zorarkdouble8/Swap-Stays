@@ -17,19 +17,29 @@ def booking_page(place_id):
 
     return render_template("Home/Booking.html", stay=place, user=user)
 
-@app.route("/places/add_review/<int:stay_id>", methods=["POST"])
-def add_review_route(stay_id):
-    user = get_user_obj()
+@app.route('/places/<int:place_id>/add_review', methods=['POST'])
+def add_review_route(place_id):
+    if 'UserId' in session:
+        user_id = session['UserId']
+        user = get_user(user_id)  # Replace with your user retrieval function
 
-    if (user == None):
-        #Do nothing, user is not logged in
-        return redirect("/places/" + str(stay_id), code = 301)
+        if user and request.form:
+            review_text = request.form.get('review_text')
+            stars = request.form.get('review_stars', type=int)
 
-    #add review
-    add_review(stay_id, user, request.form["review_text"], request.form["review_stars"])
+            if review_text and stars:
+                new_review = add_review(place_id, user.id, user.username, review_text, stars)
 
-    #refresh page
-    return redirect("/places/" + str(stay_id), code = 301)
+                if new_review:
+                    return redirect(f'/places/{place_id}')
+                else:
+                    return "Failed to add review. Please try again.", 500
+            else:
+                return "Invalid input. Please make sure all fields are filled.", 400
+        else:
+            return "User not found or invalid request.", 404
+    else:
+        return redirect('/login')
 
 
 @app.route("/", methods=["GET", "POST"])

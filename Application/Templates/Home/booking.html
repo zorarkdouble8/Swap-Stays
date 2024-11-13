@@ -72,18 +72,21 @@
                 {{ stay.address or 'Location not provided' }}
             </dd>
 
+            <!-- Display Existing Reviews -->
             <h1 class="text-left font-bold text-3xl headColor mb-4 underline">Reviews</h1>
             {% for review in stay.reviews %}
                 <dl>
                     <dt class="text-xl textColor">- {{ review.username }}</dt>
                     <dd class="textColor ml-4">- {{ review.review }}</dd>
+                    <dd class="textColor ml-4">Rating: {{ review.stars }} / 5</dd>
                 </dl>
             {% endfor %}
             
+            <!-- Add a Review Form (Visible only if the user is logged in) -->
             {% if user %}
                 <p class="text-left headColor font-bold mt-4">Add a review:</p>
-                <form action="{{ url_for('add_review', place_id=stay.place_id) }}" method="POST">
-                    <textarea name="review_text" id="review" rows="3" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
+                <form action="{{ url_for('add_review_route', place_id=stay.place_id) }}" method="POST">
+                    <textarea name="review_text" id="review" rows="3" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
                     <label for="review_stars" class="textColor">Rating:</label>
                     <select name="review_stars" class="mb-2">
                         {% for i in range(1, 6) %}
