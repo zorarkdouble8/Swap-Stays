@@ -1,10 +1,9 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Home Page - Swamp Stays</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         .backgroundBlue {
@@ -24,21 +23,9 @@
             cursor: pointer;
         }
 
-        dropbtn:hover, .dropbtn:focus {
+        .dropbtn:hover, .dropbtn:focus {
             background-color: #628ab1;
         }
-
-        #myInput {
-            box-sizing: border-box;
-            background-position: 14px 12px;
-            background-repeat: no-repeat;
-            font-size: 16px;
-            padding: 7px 10px 6px 23px;
-            border: none;
-            border-bottom: 1px solid #ddd;
-        }
-
-        #myInput:focus {outline: 3px solid #ddd;}
 
         .dropdown {
             position: relative;
@@ -56,52 +43,49 @@
 
         .dropdown-content a {
             color: black;
-            padding: 5px 8px;
+            padding: 8px 12px;
             text-decoration: none;
             display: block;
         }
 
-        .dropdown-content a:hover {background-color: #f1f1f1}
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
 
-        .show {display:block;}
-        
+        .show {
+            display: block;
+        }
     </style>
 </head>
-
 <body class="font-serif">
-
     <div class="flex flex-col justify-center items-center h-screen backgroundBlue textOrange text-center">
         <h1 class="text-4xl sm:text-5xl font-bold mb-4">Welcome to Swamp Stays</h1>
         <p class="text-lg sm:text-xl mb-6 text-white">Find and book your perfect stay close to campus with ease!</p>
 
-        <form method="POST">
-            <!-- number of guests dropdown -->
+        <!-- Search Form -->
+        <form method="GET" action="/search" class="space-y-4">
+            <!-- Number of guests dropdown -->
             <div class="dropdown mb-4">
-                <button type="button" onclick="toggleDropdown('numGuestsDropdown')" class="dropbtn">Number of guests</button>
+                <button type="button" onclick="toggleDropdown('numGuestsDropdown')" class="dropbtn">Number of Guests</button>
                 <div id="numGuestsDropdown" class="dropdown-content">
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 1)">1</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 2)">2</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 3)">3</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 4)">4</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 5)">5</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 6)">6</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 7)">7</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'num_guests', 8)">8</a>
+                    {% for num in range(1, 9) %}
+                        <a href="#" onclick="selectDropdownOption(event, 'guests', {{ num }})">{{ num }}</a>
+                    {% endfor %}
                 </div>
-                <input type="hidden" id="num_guests" name="num_guests">
+                <input type="hidden" id="guests" name="guests">
             </div>
 
-            <!-- date picker -->
-            <label for="checkin" class="text-white">Check in</label>
-            <input type="date" id="checkin" name="checkin">
-            <label for="checkout" class="text-white">Check out</label>
-            <input type="date" id="checkout" name="checkout">
+            <!-- Change fromNights and toNights to checkin and checkout for consistency -->
+            <label for="checkin" class="text-white">Check-in</label>
+            <input type="date" id="checkin" name="checkin" class="text-black">
+            <label for="checkout" class="text-white">Check-out</label>
+            <input type="date" id="checkout" name="checkout" class="text-black">
 
-            <!-- distance from campus dropdown -->
+
+            <!-- Distance from campus dropdown -->
             <div class="dropdown mt-4">
-                <button type="button" onclick="toggleDropdown('distanceDropdown')" class="dropbtn">Distance from campus</button>
+                <button type="button" onclick="toggleDropdown('distanceDropdown')" class="dropbtn">Distance from Campus</button>
                 <div id="distanceDropdown" class="dropdown-content">
-                     <!-- distance in miles for database, in minutes for users -->
                     <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '1')">Under 5 min</a>
                     <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '2')">5 min</a>
                     <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '3')">10 min</a>
@@ -110,33 +94,27 @@
                 <input type="hidden" id="miles_campus" name="miles_campus">
             </div>
 
-            <!-- submit button (TODO: center this) -->
-            <button type="submit" class="flex mt-8 items-center justify-center bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">
-                Start Booking
-            </button>
+            <!-- Submit Button -->
+            <button type="submit" class="mt-8 bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">Start Booking</button>
         </form>
 
-        <!-- login button -->
-        <a href="login">
-            <button class="flex fixed top-10 right-10 bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">Login</button>
+        <!-- Login Button -->
+        <a href="/login">
+            <button class="fixed top-10 right-10 bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">Login</button>
         </a>
-
     </div>
 
-
     <script>
-       function toggleDropdown(dropdownId) {
+        function toggleDropdown(dropdownId) {
             document.getElementById(dropdownId).classList.toggle("show");
         }
 
-        // pause other activity and click an option
         function selectDropdownOption(event, inputId, value) {
-            event.preventDefault();  
-            document.getElementById(inputId).value = value;  
+            event.preventDefault();
+            document.getElementById(inputId).value = value;
             toggleDropdown(inputId + 'Dropdown');
         }
 
-        // close dropdown
         window.onclick = function(event) {
             if (!event.target.matches('.dropbtn')) {
                 const dropdowns = document.getElementsByClassName("dropdown-content");
@@ -148,7 +126,6 @@
                 }
             }
         }
-        </script>
-
+    </script>
 </body>
 </html>

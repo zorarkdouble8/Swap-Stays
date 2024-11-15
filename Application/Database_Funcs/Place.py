@@ -64,23 +64,24 @@ def add_place(
         return None
 
 # Function to search for places based on criteria
-def search_places(guests: int = None, from_nights: int = None, to_nights: int = None, amenities: str = None) -> list:
+from datetime import datetime, timedelta
+
+def search_places(guests: int = None, checkin: str = None, checkout: str = None, amenities: str = None) -> list:
     try:
-        # Start with the base query for Place model
+        # Start with the base query for the Place model
         query = Place.query
         
         # Filter by guests if provided
         if guests is not None:
             query = query.filter(Place.guests_num >= guests)
 
-        # Handle date filtering only if from_nights or to_nights is provided
-        if from_nights is not None or to_nights is not None:
-            today = date.today()
-            if from_nights is not None:
-                available_from = today + timedelta(days=from_nights)
+        # Handle date filtering if checkin or checkout is provided
+        if checkin or checkout:
+            if checkin:
+                available_from = datetime.strptime(checkin, '%Y-%m-%d').date()
                 query = query.filter(Place.available_from <= available_from)
-            if to_nights is not None:
-                available_to = today + timedelta(days=to_nights)
+            if checkout:
+                available_to = datetime.strptime(checkout, '%Y-%m-%d').date()
                 query = query.filter(Place.available_to >= available_to)
 
         # Filter by amenities if provided
