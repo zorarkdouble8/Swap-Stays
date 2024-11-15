@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import os
 
 app = Flask(__name__)
@@ -7,7 +8,7 @@ app.template_folder = "./Templates"
 app.static_folder = "./static"
 
 #DATABASE config
-if (os.environ["TESTING"] == "True"):
+if os.environ.get("TESTING", "False") == "True":
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Test.db"
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Database.db"

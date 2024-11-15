@@ -1,7 +1,10 @@
 import pytest
+from Application import app, db # Ensure these imports point to your initialized app and db
+from flask_migrate import Migrate 
 import argparse
 import os
 
+migrate = Migrate(app, db)
 parser = argparse.ArgumentParser()
 parser.add_argument("-t", "--test", action="store_true")
 parser.add_argument("-p", "--production", action="store_true")
