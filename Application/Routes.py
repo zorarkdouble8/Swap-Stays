@@ -3,17 +3,43 @@ from Application import app
 from flask import request, session, jsonify
 from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
+from Application.Database_Funcs.Review import *
 from Application.Models import User
 from datetime import date, timedelta
-
-
 
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
     #get the page via the page id
     place = get_place(place_id=place_id)
+    user = get_user_obj()
 
-    return render_template("Home/Booking.html", stay=place)
+    #print(place.)
+
+    return render_template("Home/Booking.html", stay=place, user=user)
+
+@app.route('/places/<int:place_id>/add_review', methods=['POST'])
+def add_review_route(place_id):
+    if 'UserId' in session:
+        user_id = session['UserId']
+        user = get_user(user_id)  # Replace with your user retrieval function
+
+        if user and request.form:
+            review_text = request.form.get('review_text')
+            stars = request.form.get('review_stars', type=int)
+
+            if review_text and stars:
+                new_review = add_review(place_id, user.id, user.username, review_text, stars)
+
+                if new_review:
+                    return redirect(f'/places/{place_id}')
+                else:
+                    return "Failed to add review. Please try again.", 500
+            else:
+                return "Invalid input. Please make sure all fields are filled.", 400
+        else:
+            return "User not found or invalid request.", 404
+    else:
+        return redirect('/login')
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -123,6 +149,14 @@ def is_logged_in() -> bool:
     else:
         return False
 
+#if the user is logged in, this retrns the user object, else it returns none
+def get_user_obj() -> User:
+    if ("UserId" in session):
+        user_id = session["UserId"]
+
+        return get_user(user_id)
+    
+    return None
 
 # Display a list of places
 @app.route("/places")
@@ -157,14 +191,14 @@ def create_place():
 
 @app.route('/search', methods=['GET'])
 def search():
-    # Retrieve parameters from the request, using None as default if not provided
+    # Retrieve parameters from the request using the correct names
     guests = request.args.get('guests', type=int)
-    from_nights = request.args.get('fromNights', type=int)
-    to_nights = request.args.get('toNights', type=int)
+    checkin = request.args.get('checkin')  # Change from 'fromNights'
+    checkout = request.args.get('checkout')  # Change from 'toNights'
     amenities = request.args.get('amenities')
 
-    # Call search_places with parameters, allowing them to be None if not provided
-    results = search_places(guests=guests, from_nights=from_nights, to_nights=to_nights, amenities=amenities)
+    # Call search_places with parameters
+    results = search_places(guests=guests, checkin=checkin, checkout=checkout, amenities=amenities)
 
-    # Pass results to the places.html template
+    # Render the results to the places.html template
     return render_template("Search/Places.html", places=results)
