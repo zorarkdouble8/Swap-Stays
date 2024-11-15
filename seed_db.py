@@ -8,30 +8,50 @@ from bing_image_downloader import downloader  # Ensure bing_image_downloader is 
 
 # Hotel and Airbnb data
 luxury_hotels = [
-    "Hilton Garden Inn", "Marriott Downtown", "Hyatt Place", "The Westin Suites",
-    "DoubleTree by Hilton", "Courtyard by Marriott", "Renaissance Hotel",
-    "Embassy Suites by Hilton", "AC Hotel by Marriott", "Hilton University Plaza",
-    "Hotel Indigo", "Homewood Suites by Hilton", "Aloft Gainesville University Area",
-    "SpringHill Suites by Marriott", "Drury Inn & Suites", "Residence Inn by Marriott",
-    "TownePlace Suites by Marriott", "Hampton Inn & Suites", "Staybridge Suites",
-    "Holiday Inn Express & Suites"
+    "Hilton Garden Inn Gainesville", "Marriott Downtown Gainesville", "Hyatt Place Gainesville", 
+    "The Westin Suites Gainesville", "DoubleTree by Hilton Gainesville", 
+    "Courtyard by Marriott Gainesville", "Renaissance Hotel Gainesville", 
+    "Embassy Suites by Hilton Gainesville", "AC Hotel by Marriott Gainesville", 
+    "Hilton University Plaza Gainesville", "Hotel Indigo Gainesville", 
+    "Aloft Gainesville University Area", "Drury Inn & Suites Gainesville", 
+    "Residence Inn by Marriott Gainesville", "TownePlace Suites by Marriott Gainesville", 
+    "Hampton Inn & Suites Gainesville", "Staybridge Suites Gainesville", 
+    "Holiday Inn Express & Suites Gainesville", "The Ritz-Carlton Gainesville", 
+    "Four Seasons Hotel Gainesville", "Waldorf Astoria Gainesville", "Omni Hotel Gainesville", 
+    "JW Marriott Gainesville", "Conrad Hotels & Resorts Gainesville", 
+    "Fairmont Hotels Gainesville", "St. Regis Hotels Gainesville", "InterContinental Gainesville", 
+    "The Luxury Collection Gainesville", "Sofitel Legend Gainesville", 
+    "Park Hyatt Gainesville", "Grand Hyatt Gainesville", "Mandarin Oriental Gainesville", 
+    "The Peninsula Gainesville", "Rosewood Hotels & Resorts Gainesville"
 ]
 
 mid_range_hotels = [
-    "Comfort Suites", "Fairfield Inn & Suites by Marriott", "La Quinta Inn & Suites",
-    "Country Inn & Suites", "Best Western Gateway Grand", "Wingate by Wyndham",
-    "Sleep Inn & Suites", "Quality Inn University", "Baymont by Wyndham",
-    "Holiday Inn University", "Reitz Union Hotel - University of Florida"
+    "Comfort Suites Gainesville", "Fairfield Inn & Suites by Marriott Gainesville", 
+    "La Quinta Inn & Suites Gainesville", "Country Inn & Suites Gainesville", 
+    "Best Western Gateway Grand Gainesville", "Wingate by Wyndham Gainesville", 
+    "Sleep Inn & Suites Gainesville", "Quality Inn University Gainesville", 
+    "Baymont by Wyndham Gainesville", "Holiday Inn University Gainesville", 
+    "Reitz Union Hotel - University of Florida Gainesville", "Hawthorn Suites by Wyndham Gainesville", 
+    "SpringHill Suites by Marriott Gainesville", "Candlewood Suites Gainesville", 
+    "Best Western Plus Gainesville", "Home2 Suites by Hilton Gainesville", 
+    "Hyatt Place Gainesville", "Homewood Suites by Hilton Gainesville", 
+    "Tru by Hilton Gainesville", "MainStay Suites Gainesville", "Comfort Inn Gainesville", 
+    "Clarion Pointe Gainesville", "Fairfield by Marriott Gainesville", 
+    "Radisson Hotel Gainesville"
 ]
 
 budget_hotels = [
-    "Days Inn by Wyndham", "Super 8 by Wyndham", "Red Roof Inn Plus+",
-    "Motel 6 Gainesville", "Econo Lodge University", "America’s Best Value Inn",
-    "Quality Inn Gainesville I-75", "Budget Inn Gainesville", "Rodeway Inn",
-    "Knights Inn Gainesville", "Extended Stay America", "Travelodge by Wyndham",
-    "Howard Johnson by Wyndham", "Studio 6 Gainesville", "Suburban Extended Stay Hotel",
-    "Value Lodge Gainesville", "Gainesville Lodge", "Gator Inn", "Sunshine Inn & Suites",
-    "The University Motel"
+    "Days Inn by Wyndham Gainesville", "Super 8 by Wyndham Gainesville", 
+    "Red Roof Inn Plus+ Gainesville", "Motel 6 Gainesville", "Econo Lodge University Gainesville", 
+    "America’s Best Value Inn Gainesville", "Quality Inn Gainesville I-75", 
+    "Budget Inn Gainesville", "Rodeway Inn Gainesville", "Knights Inn Gainesville", 
+    "Extended Stay America Gainesville", "Travelodge by Wyndham Gainesville", 
+    "Howard Johnson by Wyndham Gainesville", "Studio 6 Gainesville", 
+    "Suburban Extended Stay Hotel Gainesville", "Value Lodge Gainesville", 
+    "Gainesville Lodge", "Gator Inn Gainesville", "Sunshine Inn & Suites Gainesville", 
+    "The University Motel Gainesville", "Budget Host Inn Gainesville", 
+    "Sleep Inn Gainesville", "Motel Town & Country Gainesville", 
+    "Regency Inn Gainesville", "Heritage Motor Lodge Gainesville"
 ]
 
 airbnbs = [
@@ -64,8 +84,9 @@ def random_date_range():
     random_end = min(random_start + random_duration, end_date)
     return random_start, random_end
 
+# Modified function to replace spaces with underscores
 def clean_name(name):
-    return "".join(c if c.isalnum() or c.isspace() else "_" for c in name).strip()
+    return "".join(c if c.isalnum() or c.isspace() else "_" for c in name).replace(" ", "_").strip()
 
 def download_image(place_name, target_dir):
     # Ensure directory exists
@@ -73,18 +94,18 @@ def download_image(place_name, target_dir):
     search_term = f"{place_name} Gainesville"
     try:
         downloader.download(search_term, limit=1, output_dir=target_dir, adult_filter_off=True, timeout=5)
-        return os.path.join(target_dir, f"{place_name}.jpg")
+        return os.path.join(target_dir, "Image_1.jpg").replace("static/", "")
     except Exception as e:
         print(f"Failed to download image for {place_name}: {e}")
-        return os.path.join("static/images", "default.jpg")
+        return "images/default.jpg"
 
 def get_random_airbnb_image():
-    airbnb_dir = "static/images/gainesville_airbnbs"
+    airbnb_dir = "images/gainesville_airbnbs/Gainesville_Airbnb"
     if os.path.exists(airbnb_dir):
         airbnb_images = os.listdir(airbnb_dir)
         if airbnb_images:
             return os.path.join(airbnb_dir, random.choice(airbnb_images))
-    return "static/images/default.jpg"
+    return "images/default.jpg"
 
 # Seed function
 def seed_places():
@@ -99,7 +120,7 @@ def seed_places():
     for hotels, place_type, min_price, max_price in all_hotels:
         for hotel in hotels:
             available_from, available_to = random_date_range()
-            hotel_dir = os.path.join("static/images", clean_name(hotel))
+            hotel_dir = os.path.join("images", clean_name(hotel))
             image_path = download_image(hotel, hotel_dir)
             places.append(Place(
                 place_name=hotel,
@@ -115,9 +136,9 @@ def seed_places():
             ))
 
     # Generate Airbnb entries with random images from the downloaded set
-    for airbnb in airbnbs:
+    for index, airbnb in enumerate(airbnbs, start=1):
         available_from, available_to = random_date_range()
-        image_path = get_random_airbnb_image()
+        image_path = f"images/gainesville_airbnbs/Gainesville_Airbnb/image{index}.jpg"
         places.append(Place(
             place_name=airbnb,
             place_type="Airbnb",

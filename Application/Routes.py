@@ -191,14 +191,14 @@ def create_place():
 
 @app.route('/search', methods=['GET'])
 def search():
-    # Retrieve parameters from the request, using None as default if not provided
+    # Retrieve parameters from the request using the correct names
     guests = request.args.get('guests', type=int)
-    from_nights = request.args.get('fromNights', type=int)
-    to_nights = request.args.get('toNights', type=int)
+    checkin = request.args.get('checkin')  # Change from 'fromNights'
+    checkout = request.args.get('checkout')  # Change from 'toNights'
     amenities = request.args.get('amenities')
 
-    # Call search_places with parameters, allowing them to be None if not provided
-    results = search_places(guests=guests, from_nights=from_nights, to_nights=to_nights, amenities=amenities)
+    # Call search_places with parameters
+    results = search_places(guests=guests, checkin=checkin, checkout=checkout, amenities=amenities)
 
-    # Pass results to the places.html template
+    # Render the results to the places.html template
     return render_template("Search/Places.html", places=results)
