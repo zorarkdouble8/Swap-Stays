@@ -5,6 +5,23 @@ from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
 from Application.Models import User
 from datetime import date, timedelta
+from sendgrid import Mail, SendGridAPIClient
+
+@app.route("/test_email")
+def test_email():
+    #send a email address to schverakj@gmail.com
+    email = Mail(from_email="swampstays@gmail.com", to_emails="schverakj@gmail.com", 
+                 subject="Test mail!", html_content="<strong>what a surprise!</strong>")
+    
+    try:
+
+        send_grid = SendGridAPIClient(os.environ["SEND_GRID_KEY"])
+        send_grid.send(email)
+        return "<h1>Successful!</h1>"
+    except Exception as e:
+        return "<h1>Error! {e.message}</h1>"
+
+
 
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
@@ -12,6 +29,7 @@ def booking_page(place_id):
     place = get_place(place_id=place_id)
 
     return render_template("Home/Booking.html", stay=place)
+
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -54,30 +72,26 @@ def login():
     
     return render_template("Login/Login.html", error=error)
 
-@app.route('/places/<int:place_id>/transaction', methods=['GET', 'POST'])
-def transaction(place_id):
-    place = get_place(place_id)
-
-    if (request.method == 'POST'):
-        #perform transaction
-
-        #TODO: perform error detection!
-        name = request.form.get("name")
-        phone_num = request.form.get("phone-number")
-        email = request.form.get("email")
-        credit_card = request.form.get("credit-card")
-        ccv = request.form.get("ccv")
-        expiration_date = request.form.get("expiration-date")
-        total_price = request.form.get("price")
-
-
+@app.route('/transaction', methods=['GET', 'POST'])
+def transaction():
+    if request.method == 'POST':
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
         num_guests = request.form.get('num_guests')
+        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
 
-        return f"Transaction completed for {name}."
+    return render_template('/Home/Transaction.html')
 
-    return render_template('/Home/Transaction.html', place=place)
+@app.route('/process_transaction', methods=['POST'])
+def process_transaction():
+    name = request.form.get('name')
+    checkin_date = request.form.get('checkin_date')
+    checkout_date = request.form.get('checkout_date')
+    guests = request.form.get('guests')
+    credit_card = request.form.get('credit_card')
+    price = request.form.get('price')
+
+    return f"Transaction completed for {name}."
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
