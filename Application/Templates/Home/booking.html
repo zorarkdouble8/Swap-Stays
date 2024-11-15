@@ -10,17 +10,22 @@
 
 <style>
     .checked {
+    .checked {
         color: #ffa500;
     }
+    .backgroundBlue {
     .backgroundBlue {
         background-color: #2e4775;
     }
     .buttonColor {
+    .buttonColor {
         color: #0c2a61;
     }
     .textColor {
+    .textColor {
         color: #eb8560;
     }
+    .headColor {
     .headColor {
         color: #ec5017;
     }
@@ -32,7 +37,10 @@
 <body class="font-serif">
     <div class="min-h-screen backgroundBlue">
         <nav class="bg-blue-300 w-full flex relative justify-between items-center mx-auto px-8 h-20 mb-4">
+        <nav class="bg-blue-300 w-full flex relative justify-between items-center mx-auto px-8 h-20 mb-4">
             <div class="inline-flex">
+                <a href="/" class="_o6689fn">
+                    <h1 class="text-2xl font-bold headColor">Swamp Stays</h1>
                 <a href="/" class="_o6689fn">
                     <h1 class="text-2xl font-bold headColor">Swamp Stays</h1>
                 </a>
@@ -46,16 +54,26 @@
         
         <h1 class="text-left font-bold text-3xl headColor mb-4">{{ stay.place_name }}</h1>
         <div class="flex flex-nowrap space-x-4 mb-4">
+        </nav>
+        
+        <h1 class="text-left font-bold text-3xl headColor mb-4">{{ stay.place_name }}</h1>
+        <div class="flex flex-nowrap space-x-4 mb-4">
             <img src="{{ url_for('static', filename=stay.image_path) }}" alt="{{ stay.place_name }}" width="400" height="350" class="rounded-lg">
             <div class="text-center">
+                <h2 class="underline headColor text-xl">Star Rating</h2>
                 <h2 class="underline headColor text-xl">Star Rating</h2>
                 {% for i in range(1, 6) %}
                     {% if i <= stay.rating %}
                         <span class="fa fa-star checked"></span>
                     {% else %}
+                    {% else %}
                         <span class="fa fa-star"></span>
                     {% endif %}
                 {% endfor %}
+                
+                <h3 class="text-xl headColor underline mt-4">Description</h3>
+                <p class="text-center textColor mb-2">{{ stay.description or 'No description available.' }}</p>
+                
                 
                 <h3 class="text-xl headColor underline mt-4">Description</h3>
                 <p class="text-center textColor mb-2">{{ stay.description or 'No description available.' }}</p>
@@ -65,6 +83,15 @@
                 </a>
             </div>
         </div>
+        
+        <div>
+            <dd class="flex items-center textColor">
+                <svg width="24" height="24" fill="none" stroke="orange" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1 text-slate-400 dark:text-slate-500" aria-hidden="true">
+                    <path d="M18 11.034C18 14.897 12 19 12 19s-6-4.103-6-7.966C6 7.655 8.819 5 12 5s6 2.655 6 6.034Z" />
+                    <path d="M14 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z" />
+                </svg>
+                {{ stay.address or 'Location not provided' }}
+            </dd>
         
         <div>
             <dd class="flex items-center textColor">
@@ -129,3 +156,4 @@
         </div>
     </div>
 </body>
+

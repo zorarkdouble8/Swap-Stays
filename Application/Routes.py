@@ -4,6 +4,7 @@ from flask import request, session, jsonify
 from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
 from Application.Database_Funcs.Review import *
+from Application.Database_Funcs.Review import *
 from Application.Models import User
 from datetime import date, timedelta
 
@@ -153,6 +154,14 @@ def is_logged_in() -> bool:
     else:
         return False
 
+#if the user is logged in, this retrns the user object, else it returns none
+def get_user_obj() -> User:
+    if ("UserId" in session):
+        user_id = session["UserId"]
+
+        return get_user(user_id)
+    
+    return None
 #if the user is logged in, this retrns the user object, else it returns none
 def get_user_obj() -> User:
     if ("UserId" in session):
