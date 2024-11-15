@@ -4,6 +4,7 @@ from flask import request, session, jsonify
 from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
 from Application.Database_Funcs.Review import *
+from Application.Database_Funcs.Review import *
 from Application.Models import User
 from datetime import date, timedelta
 
@@ -26,6 +27,10 @@ def add_review_route(place_id):
         if user and request.form:
             review_text = request.form.get('review_text')
             stars = request.form.get('review_stars', type=int)
+
+            # Ensure stars is valid
+            if not stars or stars < 1 or stars > 5:
+                return "Invalid rating. Please select a rating between 1 and 5.", 400
 
             if review_text and stars:
                 new_review = add_review(place_id, user.id, user.username, review_text, stars)
@@ -149,6 +154,14 @@ def is_logged_in() -> bool:
     else:
         return False
 
+#if the user is logged in, this retrns the user object, else it returns none
+def get_user_obj() -> User:
+    if ("UserId" in session):
+        user_id = session["UserId"]
+
+        return get_user(user_id)
+    
+    return None
 #if the user is logged in, this retrns the user object, else it returns none
 def get_user_obj() -> User:
     if ("UserId" in session):
