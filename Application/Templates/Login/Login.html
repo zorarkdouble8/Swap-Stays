@@ -1,24 +1,53 @@
 <!DOCTYPE html>
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h1>Login page!</h1>
-    {% if error != None %}
-        <h2>{{ error }}</h2>
-    {% endif %}
+<style>
+    .checked{
+        color: #ffa500;
+    }
+    .backgroundBlue{
+        background-color: #2e4775;
+    }
+    .buttonColor{
+        color: #0c2a61;
+    }
+    .textColor{
+        color: #eb8560;
+    }
+    .headColor{
+        color: #ec5017;
+    }
+</style>
+<body class="font-serif">
+    <!--Login page-->
+    <div class="flex flex-col items-center justify-center min-h-screen backgroundBlue">
+        
+        <h1 class="text-center font-bold text-3xl textColor mb-4">Sign in to Swamp Stays</h1>
+        {% if error != None %}
+            <h2>{{ error }}</h2>
+        {% endif %}
+    
+        <!--Login form-->
+        <form method="post" class="flex flex-col items-center space-y-4">
+            <label class="textColor">Username</label>
+            <input name="username" type="text" class="block border border-gray-300 p-2 rounded" />
+            <br/>
+            <label class="textColor">Password</label>
+            <input name="password" type="password" class="block border border-gray-300 p-2 rounded" />
+            <br/>
+            <input value="Submit" type="submit" class="textColor font-bold py-2 px-6 rounded-full cursor-pointer hover:bg-orange-600" />
+        </form>
 
-    <!--Login fourm-->
-    <form method="post">
-        <label>Username</label>
-        <input name="username" type="text"/>
-        <br/>
-        <label>Password</label>
-        <input name="password" type="password"/>
-        <br/>
-        <input value="Submit" type="submit"/>
-    </form>
-
-    <a href="/register">Create an account</a>
+    
+        <a href="/register" class="mt-4 bg-white textColor font-bold py-2 px-6 rounded-full cursor-pointer">
+            Create an account
+        </a>
+    </div>
+    
 
 </body>
