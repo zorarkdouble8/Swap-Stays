@@ -9,7 +9,7 @@ from Application.Models import User, List
 from datetime import date, timedelta
 
 @app.route("/places/<int:place_id>/add_list")
-def add_to_list(place_id):
+def add_list1(place_id):
     user = get_user_obj()
 
     #is user logged in
@@ -17,18 +17,22 @@ def add_to_list(place_id):
         list = List(place_id, user.id)
 
         add_list(list)
-        return redirect(f"/places/{place_id}", 301)
+        return redirect(f"/places/{place_id}", 302)
     else:
         return "<h1>Error</h1>"
     
 @app.route("/places/<int:place_id>/remove_list")
-def remove_list(place_id):
+def remove_list1(place_id):
     user = get_user_obj()
 
+    #is the user logged in
     if (user != None):
-        
+        for list in user.lists:
+            if (list.place_id == place_id):
+                remove_list(list)
+                break
 
-        return redirect(f"/places/{place_id}", 301)
+        return redirect(f"/places/{place_id}", 302)
     else:
         return "<h1>Error</h1>"
 
@@ -39,10 +43,11 @@ def booking_page(place_id):
     user = get_user_obj()
 
     on_list = False
-    for list in user.lists:
-        if (list.place_id == place_id):
-            on_list = True
-            break
+    if (user != None):
+        for list in user.lists:
+            if (list.place_id == place_id):
+                on_list = True
+                break
 
     return render_template("Home/Booking.html", stay=place, user=user, on_list=on_list)
 
@@ -94,7 +99,11 @@ def userHome():
 
         user = get_user(user_id)
 
-        return render_template("User/Home.html", user=user)
+        places = []
+        for list in user.lists:
+            places.append(get_place(list.place_id))
+
+        return render_template("User/Home.html", user=user, places=places)
     else:
         print("Not logged in!")
 
