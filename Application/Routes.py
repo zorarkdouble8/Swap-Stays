@@ -4,9 +4,37 @@ from flask import request, session, jsonify
 from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
 from Application.Database_Funcs.Review import *
-from Application.Database_Funcs.Review import *
-from Application.Models import User
+from Application.Database_Funcs.List import *
+from Application.Models import User, List
 from datetime import date, timedelta
+
+@app.route("/places/<int:place_id>/add_list")
+def add_list1(place_id):
+    user = get_user_obj()
+
+    #is user logged in
+    if (user != None):
+        list = List(place_id, user.id)
+
+        add_list(list)
+        return redirect(f"/places/{place_id}", 302)
+    else:
+        return "<h1>Error</h1>"
+    
+@app.route("/places/<int:place_id>/remove_list")
+def remove_list1(place_id):
+    user = get_user_obj()
+
+    #is the user logged in
+    if (user != None):
+        for list in user.lists:
+            if (list.place_id == place_id):
+                remove_list(list)
+                break
+
+        return redirect(f"/places/{place_id}", 302)
+    else:
+        return "<h1>Error</h1>"
 
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
@@ -14,9 +42,14 @@ def booking_page(place_id):
     place = get_place(place_id=place_id)
     user = get_user_obj()
 
-    #print(place.)
+    on_list = False
+    if (user != None):
+        for list in user.lists:
+            if (list.place_id == place_id):
+                on_list = True
+                break
 
-    return render_template("Home/Booking.html", stay=place, user=user)
+    return render_template("Home/Booking.html", stay=place, user=user, on_list=on_list)
 
 @app.route('/places/<int:place_id>/add_review', methods=['POST'])
 def add_review_route(place_id):
@@ -66,7 +99,11 @@ def userHome():
 
         user = get_user(user_id)
 
-        return render_template("User/Home.html", user=user)
+        places = []
+        for list in user.lists:
+            places.append(get_place(list.place_id))
+
+        return render_template("User/Home.html", user=user, places=places)
     else:
         print("Not logged in!")
 
