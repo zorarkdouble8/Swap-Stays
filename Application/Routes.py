@@ -168,3 +168,61 @@ def search():
 
     # Render the results to the places.html template
     return render_template("Search/Places.html", places=results)
+
+@app.route('/admin/add_place', methods=['GET', 'POST'])
+def admin_add_place():
+    if 'UserId' in session:
+        user_id = session['UserId']
+        user = get_user(user_id)
+        
+        if user and user.is_admin:
+            if request.method == 'POST':
+                # Get form data
+                place_name = request.form['place_name']
+                place_type = request.form['place_type']
+                price = request.form['price']
+                amenities = request.form['amenities']
+                rating = request.form['rating']
+                campus_distance = request.form['campus_distance']
+                guests_num = request.form['guests_num']
+                available_from = request.form['available_from']
+                available_to = request.form['available_to']
+                image_path = request.form['image_path']
+                
+                # Add the place to the database
+                add_place(
+                    place_name, place_type, float(price), amenities, float(rating),
+                    campus_distance, int(guests_num), date.fromisoformat(available_from),
+                    date.fromisoformat(available_to), image_path
+                )
+                return redirect('/places')
+            
+            return render_template('Places/AddPlace.html')
+        else:
+            return "Unauthorized access", 403
+    else:
+        return redirect('/login')
+
+@app.route('/admin/delete_place/<int:place_id>', methods=['POST'])
+def admin_delete_place(place_id):
+    if 'UserId' in session:
+        user_id = session['UserId']
+        user = get_user(user_id)
+
+        if user and user.is_admin:
+            try:
+                place = get_place(place_id)
+                if place:
+                    db.session.delete(place)
+                    db.session.commit()
+                    return redirect('/places')
+                else:
+                    return "Place not found", 404
+            except Exception as e:
+                print(f"Error deleting place: {e}")
+                db.session.rollback()
+                return "Error occurred while deleting place", 500
+        else:
+            return "Unauthorized access", 403
+    else:
+        return redirect('/login')
