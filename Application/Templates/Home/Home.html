@@ -62,17 +62,17 @@
         <h1 class="text-4xl sm:text-5xl font-bold mb-4">Welcome to Swamp Stays</h1>
         <p class="text-lg sm:text-xl mb-6 text-white">Find and book your perfect stay close to campus with ease!</p>
 
-        <!-- Search Form -->
+        <!-- search form -->
         <form method="GET" action="/search" class="space-y-4">
             <!-- Number of guests dropdown -->
-            <div class="dropdown mb-4">
-                <button type="button" onclick="toggleDropdown('numGuestsDropdown')" class="dropbtn">Number of Guests</button>
-                <div id="numGuestsDropdown" class="dropdown-content">
+            <div class="mb-4 flex items-center space-x-2">
+                <label for="numGuests" class="text-white">Number of Guests:</label>
+                <select id="numGuests" name="guests" class="dropbtn">
+                    <option value="" disabled selected>Select Guests</option>
                     {% for num in range(1, 9) %}
-                        <a href="#" onclick="selectDropdownOption(event, 'guests', {{ num }})">{{ num }}</a>
+                    <option value="{{ num }}">{{ num }}</option>
                     {% endfor %}
-                </div>
-                <input type="hidden" id="guests" name="guests">
+                </select>
             </div>
 
             <!-- Change fromNights and toNights to checkin and checkout for consistency -->
@@ -82,17 +82,18 @@
             <input type="date" id="checkout" name="checkout" class="text-black">
 
 
-            <!-- Distance from campus dropdown -->
-            <div class="dropdown mt-4">
-                <button type="button" onclick="toggleDropdown('distanceDropdown')" class="dropbtn">Distance from Campus</button>
-                <div id="distanceDropdown" class="dropdown-content">
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '1')">Under 5 min</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '2')">5 min</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '3')">10 min</a>
-                    <a href="#" onclick="selectDropdownOption(event, 'miles_campus', '4')">15 min</a>
-                </div>
-                <input type="hidden" id="miles_campus" name="miles_campus">
+           <!-- Distance from campus dropdown -->
+           <div class="mb-4 flex items-center space-x-2">
+            <label for="distanceFromCampus" class="text-white">Distance from Campus:</label>
+            <select id="distanceFromCampus" name="miles_campus" class="dropbtn">
+                <option value="" disabled selected>Select Distance</option>
+                <option value="1">Under 5 min</option>
+                <option value="2">5 min</option>
+                <option value="3">10 min</option>
+                <option value="4">15 min</option>
+            </select>
             </div>
+
 
             <!-- Submit Button -->
             <button type="submit" class="mt-8 bg-white text-blue-800 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-blue-700 hover:text-white transition">Start Booking</button>
