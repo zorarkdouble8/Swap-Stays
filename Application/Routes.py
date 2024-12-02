@@ -92,7 +92,7 @@ def home():
 
         # Fetch all the places from the database
         places_list = get_places()
-        return render_template("Search/Places.html", places=places_list, checkin=checkin, checkout=checkout, num_guests=num_guests)
+        return render_template("Search/Places.html", places=places_list)
 
     return render_template("Home/Home.html")
 
