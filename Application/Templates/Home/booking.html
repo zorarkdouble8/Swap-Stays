@@ -62,6 +62,8 @@
                 
                 <form action="/transaction" method="POST">
                     <input type="hidden" name="place_id" value="{{ stay.place_id }}">
+                    <input type="hidden" name="price" value="{{ stay.price }}">
+                    <input type="hidden" name="place_name" value="{{ stay.place_name }}">
                     <input type="hidden" name="checkin" value="{{ checkin }}">
                     <input type="hidden" name="checkout" value="{{ checkout }}">
                     <input type="hidden" name="num_guests" value="{{ num_guests }}">

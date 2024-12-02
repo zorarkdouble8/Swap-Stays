@@ -137,10 +137,11 @@ def transaction():
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
         num_guests = request.form.get('num_guests')
-        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
+        price = request.form.get('price')
+        name = request.form.get('place_name')
+        return render_template('/Home/Transaction.html',place_name=name, price=price, checkin=checkin, checkout=checkout, num_guests=num_guests)
 
     return render_template('/Home/Transaction.html')
-
 
 @app.route('/process_transaction', methods=['POST'])
 def process_transaction():
