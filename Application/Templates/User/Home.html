@@ -7,4 +7,23 @@
 
     <h2 id="Info"></h2>
     <button id="Logout" onclick="logout()">Logout</button>
+
+    <h1>Bookings list:</h1>
+    {% for place in places %}
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-semibold">{{ place.place_name }} - <span class="text-gray-600">{{ place.place_type }}</span></h2>
+            <p class="text-gray-700 mt-2">Price: ${{ place.price }} per night</p>
+            <p class="text-gray-700 mt-2">Rating: {{ place.rating }}</p>
+            <p class="text-gray-700 mt-2">Campus Distance: {{ place.campus_distance }}</p>
+            <p class="text-gray-700 mt-2">Guests: Up to {{ place.guests_num }}</p>
+            <p class="text-gray-700 mt-2">Available From: {{ place.available_from }}</p>
+            <p class="text-gray-700 mt-2">Available To: {{ place.available_to }}</p>
+            <p class="text-gray-700 mt-2">Amenities: {{ place.amenities }}</p>
+
+            <!-- Book Now button linking to the booking page -->
+            <a href="{{ url_for('booking_page', place_id=place.place_id) }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">
+                Book Now
+            </a>
+        </div>
+    {% endfor %}
 </body>

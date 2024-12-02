@@ -8,3 +8,4 @@ def logout():
     session.clear()
 
     return { "message": "Successful", "redirect": "/login" }
+    

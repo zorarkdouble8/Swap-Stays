@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import os
 
 app = Flask(__name__)
@@ -13,6 +14,9 @@ else:
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///../Application/Database.db"
 
 db = SQLAlchemy(app)
+
+#EMAIL config
+os.environ["SEND_GRID_KEY"] = ""
 
 #TEMPERORY SECRET KEY
 #TODO add github secret key and salt key
