@@ -60,9 +60,20 @@
                 <h3 class="text-xl headColor underline mt-4">Description</h3>
                 <p class="text-center textColor mb-2">{{ stay.description or 'No description available.' }}</p>
                 
-                <a href="/transaction" class="bg-blue-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded">
-                    Book Now
-                </a>
+                <form action="/transaction" method="POST">
+                    <input type="hidden" name="place_id" value="{{ stay.place_id }}">
+                    <input type="hidden" name="price" value="{{ stay.price }}">
+                    <input type="hidden" name="place_name" value="{{ stay.place_name }}">
+                    <input type="hidden" name="checkin" value="{{ checkin }}">
+                    <input type="hidden" name="checkout" value="{{ checkout }}">
+                    <input type="hidden" name="num_guests" value="{{ num_guests }}">
+                    <button 
+                        type="submit" 
+                        class="bg-blue-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        Book Stay
+                    </button>
+                </form>
+                
             </div>
         </div>
         
