@@ -280,13 +280,9 @@ def search():
     # Call `search_places` with parameters
     results = search_places(guests=num_guests, checkin=checkin, checkout=checkout, campus_distance=miles_campus)
 
-    # Render filtered results to the places template
-    return render_template("Search/Places.html", places=results)
-
     # Render results to the template
     return render_template("Search/Places.html", places=results, user=user)
 
-    
 @app.route('/admin/add_place', methods=['GET', 'POST'])
 def admin_add_place():
     if 'UserId' in session:
@@ -311,7 +307,7 @@ def admin_add_place():
                 add_place(
                     place_name, place_type, float(price), amenities, float(rating),
                     campus_distance, int(guests_num), date.fromisoformat(available_from),
-                    date.fromisoformat(available_to), image_path
+                    date.fromisoformat(available_to)
                 )
                 return redirect('/places')
             
