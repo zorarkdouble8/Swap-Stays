@@ -39,14 +39,15 @@
                 <label for="price" class="block text-lg textColor">Total Price:</label>
                 <input type="text" id="price" name="price" readonly class="mt-1 p-2 border rounded w-full" value="{{ stay.price }}">
             </div>
-
+            
+            <!-- Figure out how to connect to the database
             <h2 class="text-lg textColor">Booking Summary</h2>
             <p>Check-in date: {{ checkin }}</p>
             <p>Check-out date: {{ checkout }}</p>
-            <p>Number of guests: {{ num_guests }}</p>
+            <p>Number of guests: {{num_guests }}</p> -->
             
             <h1 class="text-left font-bold text-3xl headColor mb-4">{{ stay.place_name }}</h1>
-            <p>Price: ${{ stay.price }}</p>
+            <p>Price: ${{ stay.price }} per night</p>
             <p>Description: {{ stay.description }}</p>
 
             <form action="/confirm_booking" method="POST">
