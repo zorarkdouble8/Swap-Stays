@@ -7,6 +7,7 @@ from Application.Database_Funcs.Review import *
 from Application.Database_Funcs.List import *
 from Application.Models import User, List
 from datetime import date, timedelta
+from sendgrid import Mail, SendGridAPIClient
 
 @app.route("/places/<int:place_id>/add_list")
 def add_list1(place_id):
@@ -143,8 +144,25 @@ def process_transaction():
     guests = request.form.get('guests')
     credit_card = request.form.get('credit_card')
     price = request.form.get('price')
+    email = request.form.get("e-mail")
 
-    return f"Transaction completed for {name}."
+    email = Mail(from_email="swampstays@gmail.com", to_emails=email, 
+                 subject="Payment for booking", html_content=f"""
+                 <strong>Hi {name},</strong>
+                 <p>
+                    your booking has been booked for {checkin_date} to {checkout_date}!
+
+                    Reciept:
+                        Payed {price} for {guests} guests using {credit_card}
+                 </p>
+                 """)
+    
+    try:
+        send_grid = SendGridAPIClient(os.environ["SEND_GRID_KEY"])
+        send_grid.send(email)
+        return "Transaction completed and email sent."
+    except Exception as e:
+        return f"<h1>Error! {e}</h1>"
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
