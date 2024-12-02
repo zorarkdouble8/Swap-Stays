@@ -8,6 +8,14 @@ from datetime import date, timedelta
 
 
 
+def is_logged_in():
+    return "UserId" in session
+
+def get_user_obj():
+    if is_logged_in():
+        return db.session.get(User, session["UserId"])
+    return None
+
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
     #get the page via the page id
@@ -129,46 +137,43 @@ def is_logged_in() -> bool:
 def places():
     # Fetch all the places from the database
     places_list = get_places()
-    return render_template("Search/Places.html", places=places_list)
 
-# Route to add a new place
-@app.route("/add_place", methods=["GET", "POST"])
-def create_place():
-    error = None
-    if request.method == "POST":
-        # Retrieve form data
-        place_name = request.form["place_name"]
-        place_type = request.form["type"]
-        price = request.form["price"]
-        amenities = request.form["amenities"]
-        rating = request.form["rating"]
-        campus_distance = request.form["campus_distance"]
+    # Check if the user is logged in
+    user = get_user_obj() if is_logged_in() else None
 
-        # Add the place to the database
-        did_add_place = add_place(place_name, place_type, price, amenities, rating, campus_distance)
+    return render_template("Search/Places.html", places=places_list, user=user)
 
-        if did_add_place:
-            return redirect("/places")
-        else:
-            error = "Failed to add the place. Please try again."
 
-    return render_template("Places/AddPlace.html", error=error)
-
+def get_user(id: int) -> User:
+    try:
+        user = db.session.get(User, id)
+        print(f"Retrieved User: {user}")
+        return user
+    except Exception as e:
+        print(e)
+        return None
 
 @app.route('/search', methods=['GET'])
 def search():
-    # Retrieve parameters from the request using the correct names
+    # Retrieve user object
+    user = None
+    if 'UserId' in session:
+        user_id = session['UserId']
+        user = get_user(user_id)
+
+    # Retrieve search parameters
     guests = request.args.get('guests', type=int)
-    checkin = request.args.get('checkin')  # Change from 'fromNights'
-    checkout = request.args.get('checkout')  # Change from 'toNights'
+    checkin = request.args.get('checkin')
+    checkout = request.args.get('checkout')
     amenities = request.args.get('amenities')
 
     # Call search_places with parameters
     results = search_places(guests=guests, checkin=checkin, checkout=checkout, amenities=amenities)
 
-    # Render the results to the places.html template
-    return render_template("Search/Places.html", places=results)
+    # Render results to the template
+    return render_template("Search/Places.html", places=results, user=user)
 
+    
 @app.route('/admin/add_place', methods=['GET', 'POST'])
 def admin_add_place():
     if 'UserId' in session:
@@ -197,7 +202,7 @@ def admin_add_place():
                 )
                 return redirect('/places')
             
-            return render_template('Places/AddPlace.html')
+            return render_template('User/AddPlace.html')
         else:
             return "Unauthorized access", 403
     else:
@@ -226,3 +231,4 @@ def admin_delete_place(place_id):
             return "Unauthorized access", 403
     else:
         return redirect('/login')
+

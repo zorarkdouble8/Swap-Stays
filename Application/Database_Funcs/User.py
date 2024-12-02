@@ -63,7 +63,7 @@ def create_user(username, password, email=None, is_admin=False) -> User:
         db.session.rollback()
         return None
 
-    
+
 #returns an encrypted password
 def encrypt_password(password) -> str:
     type = PBKDF2HMAC(hashes.SHA256(), 32, bytes(os.environ["SALT_KEY"], "utf-8"), 500000)
