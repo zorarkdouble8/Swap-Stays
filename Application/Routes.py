@@ -7,6 +7,7 @@ from Application.Database_Funcs.Review import *
 from Application.Database_Funcs.List import *
 from Application.Models import User, List
 from datetime import date, timedelta
+from sendgrid import Mail, SendGridAPIClient
 
 @app.route("/places/<int:place_id>/add_list")
 def add_list1(place_id):
