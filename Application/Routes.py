@@ -160,7 +160,7 @@ def process_transaction():
     try:
         send_grid = SendGridAPIClient(os.environ["SEND_GRID_KEY"])
         send_grid.send(email)
-        return f"Transaction completed for {name} and email sent."
+        return f"Transaction completed for " + str(name) + " and email sent."
     except Exception as e:
         return f"<h1>Error! {e}</h1>"
 
