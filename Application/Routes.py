@@ -92,6 +92,11 @@ def add_review_route(place_id):
 @app.route("/", methods=["GET", "POST"])
 def home():
     if (request.method == "POST"):
+        # retrieve data for summary
+        checkin = request.form.get("checkin")
+        checkout = request.form.get("checkout")
+        num_guests = request.form.get("guests")
+
         print("PARAMS: ", request.form["checkin"], request.form["checkout"], request.form["num_guests"], request.form["miles_campus"])
 
         # Fetch all the places from the database
@@ -140,29 +145,27 @@ def transaction():
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
         num_guests = request.form.get('num_guests')
-        return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests)
+        price = request.form.get('price')
+        name = request.form.get('place_name')
+        return render_template('/Home/Transaction.html',place_name=name, price=price, checkin=checkin, checkout=checkout, num_guests=num_guests)
 
     return render_template('/Home/Transaction.html')
 
 @app.route('/process_transaction', methods=['POST'])
 def process_transaction():
     name = request.form.get('name')
-    checkin_date = request.form.get('checkin_date')
-    checkout_date = request.form.get('checkout_date')
-    guests = request.form.get('guests')
-    credit_card = request.form.get('credit_card')
     price = request.form.get('price')
+    place_name = request.form.get('place_name')
     email = request.form.get("e-mail")
 
     email = Mail(from_email="swampstays@gmail.com", to_emails=email, 
                  subject="Payment for booking", html_content=f"""
                  <strong>Hi {name},</strong>
+                 <p>Your booking has been booked!</p>
                  <p>
-                    your booking has been booked for {checkin_date} to {checkout_date}!
-
                     Reciept:
-                        Payed {price} for {guests} guests using {credit_card}
-                 </p>
+                        Payed ${price} a night for {place_name} 
+                </p>
                  """)
     
     try:
@@ -257,6 +260,11 @@ def get_user(id: int) -> User:
 
 @app.route('/search', methods=['GET'])
 def search():
+    # Retrieve parameters from the request
+    num_guests = request.args.get('num_guests', type=int)
+    checkin = request.args.get('checkin')
+    checkout = request.args.get('checkout')
+    miles_campus = request.args.get('miles_campus')
     # Retrieve user object
     user = None
     if 'UserId' in session:
@@ -269,8 +277,11 @@ def search():
     checkout = request.args.get('checkout')
     amenities = request.args.get('amenities')
 
-    # Call search_places with parameters
-    results = search_places(guests=guests, checkin=checkin, checkout=checkout, amenities=amenities)
+    # Call `search_places` with parameters
+    results = search_places(guests=num_guests, checkin=checkin, checkout=checkout, campus_distance=miles_campus)
+
+    # Render filtered results to the places template
+    return render_template("Search/Places.html", places=results)
 
     # Render results to the template
     return render_template("Search/Places.html", places=results, user=user)

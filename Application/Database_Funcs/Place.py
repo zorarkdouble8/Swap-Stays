@@ -66,31 +66,28 @@ def add_place(
 # Function to search for places based on criteria
 from datetime import datetime, timedelta
 
-def search_places(guests: int = None, checkin: str = None, checkout: str = None, amenities: str = None) -> list:
+def search_places(guests: int = None, checkin: str = None, checkout: str = None, campus_distance: str = None) -> list:
     try:
-        # Start with the base query for the Place model
+        # Start with the base query
         query = Place.query
-        
-        # Filter by guests if provided
+
+        # Filter by number of guests
         if guests is not None:
             query = query.filter(Place.guests_num >= guests)
 
-        # Handle date filtering if checkin or checkout is provided
-        if checkin or checkout:
-            if checkin:
-                available_from = datetime.strptime(checkin, '%Y-%m-%d').date()
-                query = query.filter(Place.available_from <= available_from)
-            if checkout:
-                available_to = datetime.strptime(checkout, '%Y-%m-%d').date()
-                query = query.filter(Place.available_to >= available_to)
+        # Handle check-in and check-out dates
+        if checkin:
+            available_from = datetime.strptime(checkin, '%Y-%m-%d').date()
+            query = query.filter(Place.available_from <= available_from)
+        if checkout:
+            available_to = datetime.strptime(checkout, '%Y-%m-%d').date()
+            query = query.filter(Place.available_to >= available_to)
 
-        # Filter by amenities if provided
-        if amenities:
-            amenities_list = amenities.lower().split(',')
-            for amenity in amenities_list:
-                query = query.filter(Place.amenities.ilike(f'%{amenity.strip()}%'))
+        # Filter by campus distance
+        if campus_distance:
+            query = query.filter(Place.campus_distance == campus_distance)
 
-        # Execute and return query results
+        # Return filtered results
         return query.all()
     except Exception as e:
         print(f"Error searching for places: {e}")
