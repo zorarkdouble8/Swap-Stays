@@ -1,6 +1,48 @@
 <!DOCTYPE html>
 <head>
-    <script type="text/javascript" src="{{url_for('static', filename='User/logout_button.js')}}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<style>
+    .backgroundBlue{
+        background-color: #2e4775;
+    }
+    .buttonColor{
+        color: #0c2a61;
+    }
+    .textColor{
+        color: #eb8560;
+    }
+    .headColor{
+        color: #ec5017;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<style>
+    .backgroundBlue {
+        background-color: #2e4775;
+    }
+    .buttonColor {
+        color: #0c2a61;
+    }
+    .textColor {
+        color: #eb8560;
+    }
+    .headColor {
+        color: #ec5017;
+    }
+</style>
+<head>
+    <script type="text/javascript" src="{{ url_for('static', filename='User/logout_button.js') }}"></script>
 </head>
 <body>
     <h1>Welcome {{ user.username }}!</h1>
