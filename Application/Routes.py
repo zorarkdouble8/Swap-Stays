@@ -7,6 +7,7 @@ from Application.Database_Funcs.Review import *
 from Application.Database_Funcs.List import *
 from Application.Models import User, List
 from datetime import date, timedelta
+from sendgrid import Mail, SendGridAPIClient
 
 @app.route("/places/<int:place_id>/add_list")
 def add_list1(place_id):
@@ -92,7 +93,7 @@ def home():
 
         # Fetch all the places from the database
         places_list = get_places()
-        return render_template("Search/Places.html", places=places_list, checkin=checkin, checkout=checkout, num_guests=num_guests)
+        return render_template("Search/Places.html", places=places_list)
 
     return render_template("Home/Home.html")
 
@@ -136,23 +137,35 @@ def transaction():
         checkin = request.form.get('checkin')
         checkout = request.form.get('checkout')
         num_guests = request.form.get('num_guests')
-        place_id = request.form.get('place_id')
+        price = request.form.get('price')
+        name = request.form.get('place_name')
+        return render_template('/Home/Transaction.html',place_name=name, price=price, checkin=checkin, checkout=checkout, num_guests=num_guests)
 
-        stay = get_place(place_id)
-
-    return render_template('/Home/Transaction.html', checkin=checkin, checkout=checkout, num_guests=num_guests, stay=stay)
-
+    return render_template('/Home/Transaction.html')
 
 @app.route('/process_transaction', methods=['POST'])
 def process_transaction():
     name = request.form.get('name')
-    checkin_date = request.form.get('checkin_date')
-    checkout_date = request.form.get('checkout_date')
-    guests = request.form.get('guests')
-    credit_card = request.form.get('credit_card')
     price = request.form.get('price')
+    place_name = request.form.get('place_name')
+    email = request.form.get("e-mail")
 
-    return f"Transaction completed for {name}."
+    email = Mail(from_email="swampstays@gmail.com", to_emails=email, 
+                 subject="Payment for booking", html_content=f"""
+                 <strong>Hi {name},</strong>
+                 <p>Your booking has been booked!</p>
+                 <p>
+                    Reciept:
+                        Payed ${price} a night for {place_name} 
+                </p>
+                 """)
+    
+    try:
+        send_grid = SendGridAPIClient(os.environ["SEND_GRID_KEY"])
+        send_grid.send(email)
+        return "Transaction completed and email sent."
+    except Exception as e:
+        return f"<h1>Error! {e}</h1>"
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():

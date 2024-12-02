@@ -15,6 +15,9 @@ else:
 
 db = SQLAlchemy(app)
 
+#EMAIL config
+os.environ["SEND_GRID_KEY"] = ""
+
 #TEMPERORY SECRET KEY
 #TODO add github secret key and salt key
 os.environ["ENCRYPT_KEY"] = "Temp key!"
