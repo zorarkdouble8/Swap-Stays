@@ -249,14 +249,14 @@ def create_place():
 
 @app.route('/search', methods=['GET'])
 def search():
-    # Retrieve parameters from the request using the correct names
-    guests = request.args.get('guests', type=int)
-    checkin = request.args.get('checkin')  # Change from 'fromNights'
-    checkout = request.args.get('checkout')  # Change from 'toNights'
-    amenities = request.args.get('amenities')
+    # Retrieve parameters from the request
+    num_guests = request.args.get('num_guests', type=int)
+    checkin = request.args.get('checkin')
+    checkout = request.args.get('checkout')
+    miles_campus = request.args.get('miles_campus')
 
-    # Call search_places with parameters
-    results = search_places(guests=guests, checkin=checkin, checkout=checkout, amenities=amenities)
+    # Call `search_places` with parameters
+    results = search_places(guests=num_guests, checkin=checkin, checkout=checkout, campus_distance=miles_campus)
 
-    # Render the results to the places.html template
+    # Render filtered results to the places template
     return render_template("Search/Places.html", places=results)
