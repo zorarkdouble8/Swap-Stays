@@ -146,22 +146,18 @@ def transaction():
 @app.route('/process_transaction', methods=['POST'])
 def process_transaction():
     name = request.form.get('name')
-    checkin_date = request.form.get('checkin_date')
-    checkout_date = request.form.get('checkout_date')
-    guests = request.form.get('guests')
-    credit_card = request.form.get('credit_card')
     price = request.form.get('price')
+    place_name = request.form.get('place_name')
     email = request.form.get("e-mail")
 
     email = Mail(from_email="swampstays@gmail.com", to_emails=email, 
                  subject="Payment for booking", html_content=f"""
                  <strong>Hi {name},</strong>
+                 <p>Your booking has been booked!</p>
                  <p>
-                    your booking has been booked for {checkin_date} to {checkout_date}!
-
                     Reciept:
-                        Payed {price} for {guests} guests using {credit_card}
-                 </p>
+                        Payed ${price} a night for {place_name} 
+                </p>
                  """)
     
     try:
