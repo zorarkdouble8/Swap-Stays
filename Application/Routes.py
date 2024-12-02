@@ -4,8 +4,38 @@ from flask import request, session, jsonify
 from Application.Database_Funcs.User import *
 from Application.Database_Funcs.Place import *
 from Application.Database_Funcs.Review import *
-from Application.Models import User
+from Application.Database_Funcs.List import *
+from Application.Models import User, List
 from datetime import date, timedelta
+from sendgrid import Mail, SendGridAPIClient
+
+@app.route("/places/<int:place_id>/add_list")
+def add_list1(place_id):
+    user = get_user_obj()
+
+    #is user logged in
+    if (user != None):
+        list = List(place_id, user.id)
+
+        add_list(list)
+        return redirect(f"/places/{place_id}", 302)
+    else:
+        return "<h1>Error</h1>"
+    
+@app.route("/places/<int:place_id>/remove_list")
+def remove_list1(place_id):
+    user = get_user_obj()
+
+    #is the user logged in
+    if (user != None):
+        for list in user.lists:
+            if (list.place_id == place_id):
+                remove_list(list)
+                break
+
+        return redirect(f"/places/{place_id}", 302)
+    else:
+        return "<h1>Error</h1>"
 
 @app.route("/places/<int:place_id>")
 def booking_page(place_id):
@@ -13,9 +43,14 @@ def booking_page(place_id):
     place = get_place(place_id=place_id)
     user = get_user_obj()
 
-    #print(place.)
+    on_list = False
+    if (user != None):
+        for list in user.lists:
+            if (list.place_id == place_id):
+                on_list = True
+                break
 
-    return render_template("Home/Booking.html", stay=place, user=user)
+    return render_template("Home/Booking.html", stay=place, user=user, on_list=on_list)
 
 @app.route('/places/<int:place_id>/add_review', methods=['POST'])
 def add_review_route(place_id):
@@ -26,6 +61,10 @@ def add_review_route(place_id):
         if user and request.form:
             review_text = request.form.get('review_text')
             stars = request.form.get('review_stars', type=int)
+
+            # Ensure stars is valid
+            if not stars or stars < 1 or stars > 5:
+                return "Invalid rating. Please select a rating between 1 and 5.", 400
 
             if review_text and stars:
                 new_review = add_review(place_id, user.id, user.username, review_text, stars)
@@ -61,7 +100,11 @@ def userHome():
 
         user = get_user(user_id)
 
-        return render_template("User/Home.html", user=user)
+        places = []
+        for list in user.lists:
+            places.append(get_place(list.place_id))
+
+        return render_template("User/Home.html", user=user, places=places)
     else:
         print("Not logged in!")
 
@@ -101,8 +144,25 @@ def process_transaction():
     guests = request.form.get('guests')
     credit_card = request.form.get('credit_card')
     price = request.form.get('price')
+    email = request.form.get("e-mail")
 
-    return f"Transaction completed for {name}."
+    email = Mail(from_email="swampstays@gmail.com", to_emails=email, 
+                 subject="Payment for booking", html_content=f"""
+                 <strong>Hi {name},</strong>
+                 <p>
+                    your booking has been booked for {checkin_date} to {checkout_date}!
+
+                    Reciept:
+                        Payed {price} for {guests} guests using {credit_card}
+                 </p>
+                 """)
+    
+    try:
+        send_grid = SendGridAPIClient(os.environ["SEND_GRID_KEY"])
+        send_grid.send(email)
+        return "Transaction completed and email sent."
+    except Exception as e:
+        return f"<h1>Error! {e}</h1>"
 
 @app.route("/register", methods=["GET", "POST"])
 def createUser():
@@ -149,6 +209,14 @@ def is_logged_in() -> bool:
     else:
         return False
 
+#if the user is logged in, this retrns the user object, else it returns none
+def get_user_obj() -> User:
+    if ("UserId" in session):
+        user_id = session["UserId"]
+
+        return get_user(user_id)
+    
+    return None
 #if the user is logged in, this retrns the user object, else it returns none
 def get_user_obj() -> User:
     if ("UserId" in session):

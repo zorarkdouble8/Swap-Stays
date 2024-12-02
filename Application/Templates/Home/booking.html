@@ -24,6 +24,9 @@
     .headColor {
         color: #ec5017;
     }
+    .filled{
+        color: gold;
+    }
 </style>
 
 <body class="font-serif">
@@ -88,15 +91,53 @@
                 <form action="{{ url_for('add_review_route', place_id=stay.place_id) }}" method="POST">
                     <textarea name="review_text" id="review" rows="3" class="block p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 mb-2" placeholder="Write your thoughts here..."></textarea>
                     <label for="review_stars" class="textColor">Rating:</label>
-                    <select name="review_stars" class="mb-2">
-                        {% for i in range(1, 6) %}
-                            <option value="{{ i }}">{{ i }}</option>
-                        {% endfor %}
-                    </select>
+                    <div id="rating">
+                        <span class="fa fa-star" data-index="1"></span>
+                        <span class="fa fa-star" data-index="2"></span>
+                        <span class="fa fa-star" data-index="3"></span>
+                        <span class="fa fa-star" data-index="4"></span>
+                        <span class="fa fa-star" data-index="5"></span>
+                    </div>
+                    <input type="hidden" name="review_stars" id="review_stars" value="0">
+                    
+                    <script>
+                        const ratingValueInput = document.getElementById('review_stars');
+                        const stars = document.querySelectorAll('#rating .fa-star');
+                
+                        stars.forEach((star, index) => {
+                            star.addEventListener('click', () => {
+                                
+                                stars.forEach(s => s.classList.remove('filled'));
+                
+                            
+                                for (let i = 0; i <= index; i++) {
+                                    stars[i].classList.add('filled');
+                                }
+
+                                ratingValueInput.value = index + 1;
+                            });
+                        });
+                    </script>
+                                   
                     <div class="text-left">
                         <input type="submit" class="bg-blue-500 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-1 px-2 rounded" value="Submit">
                     </div>
                 </form>
+
+                <!--Add to list-->
+                {% if on_list %}
+                <a href="/places/{{stay.place_id}}/remove_list">
+                    <button class="bg-yellow-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded">
+                        Remove list
+                    </button>
+                </a>
+                {% else %}
+                <a href="/places/{{stay.place_id}}/add_list">
+                    <button class="bg-blue-400 hover:bg-blue-700 text-orange-500 hover:text-white font-bold py-2 px-4 rounded">
+                        Add to list
+                    </button>
+                </a>
+                {% endif %}
             {% else %}
                 <p class="bg-blue-500 text-white p-2 rounded">To add a review, please <a href="/register" class="underline">create an account</a> or <a href="/login" class="underline">log in</a>.</p>
             {% endif %}

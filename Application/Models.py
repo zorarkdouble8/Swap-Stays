@@ -11,6 +11,8 @@ class User(db.Model):
 
     # Define one relationship to reviews
     reviews = db.relationship('Review', back_populates='user', lazy=True)
+    # Define one relationship to list
+    lists = db.relationship('List', back_populates='user', lazy=True)
 
     def __init__(self, username, password, email=None):
         self.username = username
@@ -69,6 +71,19 @@ class Review(db.Model):
         self.username = username
         self.review = review
         self.stars = stars
+
+class List(db.Model):
+    __tablename__ = 'lists'
+    id = db.Column(db.Integer, primary_key=True, unique=True, autoincrement=True)
+    place_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    # Backpopulates for relationships
+    user = db.relationship('User', back_populates='lists')
+
+    def __init__(self, place_id, user_id):
+        self.place_id = place_id
+        self.user_id = user_id
 
 # Create tables in the database
 with app.app_context():
