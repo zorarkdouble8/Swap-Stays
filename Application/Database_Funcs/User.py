@@ -49,10 +49,10 @@ def verify_login(username, password) -> User:
     else:
         return None
         
-#creates a user and return None if it fails
-def create_user(username, password, email=None) -> User:
+#creates a user and return None if it fails    
+def create_user(username, password, email=None, is_admin=False) -> User:
     token = encrypt_password(password)
-    new_user = User(username, token, email)
+    new_user = User(username, token, email, is_admin)
 
     try:
         db.session.add(new_user)
@@ -60,8 +60,10 @@ def create_user(username, password, email=None) -> User:
         return new_user
     except Exception as error:
         print(error)
+        db.session.rollback()
         return None
-    
+
+
 #returns an encrypted password
 def encrypt_password(password) -> str:
     type = PBKDF2HMAC(hashes.SHA256(), 32, bytes(os.environ["SALT_KEY"], "utf-8"), 500000)

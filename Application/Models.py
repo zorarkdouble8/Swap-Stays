@@ -8,16 +8,22 @@ class User(db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(50), nullable=True)
+    is_admin = db.Column(db.Boolean, default=False)  # New column for admin privileges
 
     # Define one relationship to reviews
     reviews = db.relationship('Review', back_populates='user', lazy=True)
     # Define one relationship to list
     lists = db.relationship('List', back_populates='user', lazy=True)
 
-    def __init__(self, username, password, email=None):
+    def __init__(self, username, password, email=None, is_admin=False):
         self.username = username
         self.password = password
         self.email = email
+        self.is_admin = is_admin  # Initialize admin status
+
+    def can_add_or_remove_listings(self):
+        """Check if the user has admin privileges."""
+        return self.is_admin
 
 # Place Model
 class Place(db.Model):
